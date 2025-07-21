@@ -1,4 +1,4 @@
-import NextAuth, { type AuthOptions } from 'next-auth';
+import { type AuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
@@ -156,4 +156,3 @@ export const authOptions: AuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
