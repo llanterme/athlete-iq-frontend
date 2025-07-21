@@ -16,3 +16,16 @@ frontend:
     paths:
       - .next/cache/**/*
       - .npm/**/*
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: 'Strict-Transport-Security'
+        value: 'max-age=31536000; includeSubDomains'
+      - key: 'X-Frame-Options'
+        value: 'SAMEORIGIN'
+      - key: 'X-Content-Type-Options'
+        value: 'nosniff'
+rewrites:
+  - source: /api/proxy/<*>
+    target: http://payment-cluster-load-balancer-1798404675.eu-west-2.elb.amazonaws.com:8000/api/<*>
+    status: 200
