@@ -25,7 +25,7 @@ customHeaders:
         value: 'SAMEORIGIN'
       - key: 'X-Content-Type-Options'
         value: 'nosniff'
-rewrites:
-  - source: /api/proxy/**
-    target: http://payment-cluster-load-balancer-1798404675.eu-west-2.elb.amazonaws.com:8000/**
+redirects:
+  - source: /api/proxy/<*>
+    target: http://payment-cluster-load-balancer-1798404675.eu-west-2.elb.amazonaws.com:8000/<*>
     status: 200
