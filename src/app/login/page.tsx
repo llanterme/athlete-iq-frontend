@@ -45,24 +45,32 @@ export default function LoginPage() {
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-white">Welcome to Athlete IQ</h2>
               <p className="text-white/80">
-                Connect your Strava account to get AI-powered insights about your fitness activities.
+                Transform your Strava data into actionable insights with AI-powered analytics and personalized coaching.
               </p>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Features:</h3>
+              <h3 className="text-lg font-medium text-white">🚀 What you'll get:</h3>
               <ul className="space-y-2 text-white/80">
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-tertiary-500 rounded-full mr-3"></span>
-                  View your Strava profile and statistics
+                  <span className="text-2xl mr-3">📊</span>
+                  <span className="text-left">Advanced fitness metrics: TSS, CTL, ATL, and TSB tracking</span>
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-tertiary-500 rounded-full mr-3"></span>
-                  Chat with AI about your activities (coming soon)
+                  <span className="text-2xl mr-3">🤖</span>
+                  <span className="text-left">Chat with AI about your training, recovery, and performance</span>
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-tertiary-500 rounded-full mr-3"></span>
-                  Get personalized training insights (coming soon)
+                  <span className="text-2xl mr-3">📈</span>
+                  <span className="text-left">Interactive charts showing your fitness trends and progress</span>
+                </li>
+                <li className="flex items-center">
+                  <span className="text-2xl mr-3">🏆</span>
+                  <span className="text-left">Personal records tracking and threshold power estimates</span>
+                </li>
+                <li className="flex items-center">
+                  <span className="text-2xl mr-3">🎯</span>
+                  <span className="text-left">Sport-specific analysis for cycling, running, and more</span>
                 </li>
               </ul>
             </div>
