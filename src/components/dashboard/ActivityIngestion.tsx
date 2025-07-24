@@ -2,15 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { apiClient, IngestionStatus } from '@/lib/api';
+import { apiClient, IngestionStatus, UserStats } from '@/lib/api';
 
 interface ActivityIngestionProps {
   onIngestionComplete?: () => void;
-}
-
-interface UserStats {
-  total_activities: number;
-  ingestion_status: IngestionStatus | null;
 }
 
 export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProps) {
