@@ -19,6 +19,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
   const [error, setError] = useState<string | null>(null);
   const [initialHistoryLoaded, setInitialHistoryLoaded] = useState(false);
   const [userHasInteracted, setUserHasInteracted] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -36,9 +37,23 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
   useEffect(() => {
     // Load chat history when component mounts
     if (session?.user?.id) {
+      // Restore conversation ID from session storage
+      const savedConversationId = sessionStorage.getItem('chatConversationId');
+      if (savedConversationId) {
+        setConversationId(savedConversationId);
+      }
       loadChatHistory();
     }
   }, [session?.user?.id]);
+
+  // Save conversation ID to session storage whenever it changes
+  useEffect(() => {
+    if (conversationId) {
+      sessionStorage.setItem('chatConversationId', conversationId);
+    } else {
+      sessionStorage.removeItem('chatConversationId');
+    }
+  }, [conversationId]);
 
   const loadChatHistory = async () => {
     if (!session?.user?.id) return;
@@ -47,7 +62,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
       const userId = session.user.id || session.user.stravaId?.toString();
       if (!userId) return;
 
-      const { history } = await apiClient.getChatHistory(userId);
+      const { history } = await apiClient.getChatHistory(userId, conversationId || undefined);
       setMessages(history);
       // Mark initial history as loaded AFTER setting messages
       setInitialHistoryLoaded(true);
@@ -92,7 +107,13 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
       const response = await apiClient.chatWithAI({
         user_id: userId,
         query: currentMessage,
+        ...(conversationId && { conversation_id: conversationId }),
       });
+
+      // Store conversation ID if this is the first message
+      if (!conversationId && response.conversation_id) {
+        setConversationId(response.conversation_id);
+      }
 
       // Add assistant response
       const assistantMessage: ChatMessage = {
@@ -146,10 +167,17 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      const response = await apiClient.askFollowUp({
+      // Use main chat endpoint with conversation_id for proper context
+      const response = await apiClient.chatWithAI({
         user_id: userId,
         query: question,
+        ...(conversationId && { conversation_id: conversationId }),
       });
+
+      // Store conversation ID if this is the first message
+      if (!conversationId && response.conversation_id) {
+        setConversationId(response.conversation_id);
+      }
 
       // Add assistant response
       const assistantMessage: ChatMessage = {
@@ -179,10 +207,11 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
       const userId = session.user.id || session.user.stravaId?.toString();
       if (!userId) return;
 
-      await apiClient.clearChatHistory(userId);
+      await apiClient.clearChatHistory(userId, conversationId || undefined);
       setMessages([]);
       setFollowUpQuestions([]);
       setError(null);
+      setConversationId(null); // Reset conversation ID when clearing
       // Mark user as having interacted when clearing history
       setUserHasInteracted(true);
       // We've manually cleared history, so make sure auto-scroll works for new messages
@@ -190,6 +219,15 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to clear history');
     }
+  };
+
+  const startNewChat = () => {
+    // Clear current conversation context without clearing history
+    setConversationId(null);
+    setFollowUpQuestions([]);
+    setError(null);
+    // Mark user as having interacted
+    setUserHasInteracted(true);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -270,15 +308,25 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800">Chat with AI</h3>
-        <Button
-          onClick={clearHistory}
-          variant="ghost"
-          size="sm"
-          disabled={messages.length === 0}
-          className="text-red-600 hover:bg-red-50 border border-red-200 hover:border-red-300 rounded-md px-3 py-1.5"
-        >
-          🗑️ Clear Chat
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={startNewChat}
+            variant="ghost"
+            size="sm"
+            className="text-blue-600 hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-md px-3 py-1.5"
+          >
+            ➕ New Chat
+          </Button>
+          <Button
+            onClick={clearHistory}
+            variant="ghost"
+            size="sm"
+            disabled={messages.length === 0}
+            className="text-red-600 hover:bg-red-50 border border-red-200 hover:border-red-300 rounded-md px-3 py-1.5"
+          >
+            🗑️ Clear Chat
+          </Button>
+        </div>
       </div>
 
       {/* Messages */}
