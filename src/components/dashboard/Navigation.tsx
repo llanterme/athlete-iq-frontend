@@ -18,6 +18,14 @@ export function Navigation() {
             <h1 className="text-xl font-bold text-white">🏃 Athlete IQ</h1>
           </div>
           
+          <div className="flex items-center">
+            <img
+              src="/api_logo_pwrdBy_strava_horiz_orange.png"
+              alt="Powered by Strava"
+              className="h-6 w-auto"
+            />
+          </div>
+          
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"

@@ -75,20 +75,38 @@ export default function LoginPage() {
               </ul>
             </div>
 
-            <div className="pt-4">
-              <Button
+            <div className="pt-4 flex justify-center">
+              <button
                 onClick={handleStravaLogin}
-                loading={isLoading}
-                size="lg"
-                className="w-full"
+                disabled={isLoading}
+                className="transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Connecting...' : 'Connect with Strava'}
-              </Button>
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-3 px-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    <span className="ml-3 text-white font-medium">Connecting...</span>
+                  </div>
+                ) : (
+                  <img
+                    src="/connect-with-strava.png"
+                    alt="Connect with Strava"
+                    className="h-12 w-auto"
+                  />
+                )}
+              </button>
             </div>
 
-            <p className="text-sm text-white/60">
-              🔒 Your data is secure and will only be used within this app.
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm text-white/60">
+                🔒 Your data is secure and will only be used within this app.
+              </p>
+              <p className="text-sm text-white/60">
+                By connecting, you agree to our{' '}
+                <a href="/privacy" className="text-white underline hover:text-white/80 transition-colors">
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
           </div>
         </Card>
       </div>
