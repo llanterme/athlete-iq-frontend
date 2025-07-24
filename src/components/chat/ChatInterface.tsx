@@ -268,14 +268,16 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
   return (
     <Card className="flex flex-col h-[800px] bg-white">
       {/* Header */}
-      <div className="flex items-center justify-end p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800">Chat with AI</h3>
         <Button
           onClick={clearHistory}
           variant="ghost"
           size="sm"
           disabled={messages.length === 0}
+          className="text-red-600 hover:bg-red-50 border border-red-200 hover:border-red-300 rounded-md px-3 py-1.5"
         >
-          Clear Chat
+          🗑️ Clear Chat
         </Button>
       </div>
 
@@ -368,7 +370,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
           <textarea
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
             placeholder="Ask me about your fitness activities..."
             className="flex-1 px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
             rows={1}

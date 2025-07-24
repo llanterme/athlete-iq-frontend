@@ -1,6 +1,5 @@
 import { StravaStats } from '@/types/strava';
 import { ActivityStatsCard } from './ActivityStatsCard';
-import { PersonalRecords } from './PersonalRecords';
 
 interface StatsGridProps {
   stats: StravaStats;
@@ -94,7 +93,6 @@ export function StatsGrid({ stats }: StatsGridProps) {
         </div>
       )}
 
-      <PersonalRecords stats={stats} />
     </div>
   );
 }

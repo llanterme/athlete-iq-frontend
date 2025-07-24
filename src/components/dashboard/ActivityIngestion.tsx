@@ -22,6 +22,8 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [config, setConfig] = useState<any>(null);
+  const [syncDays, setSyncDays] = useState<number>(30); // Default to 30 days
+  const [showSyncOptions, setShowSyncOptions] = useState(false);
 
   // Clear polling interval on unmount
   useEffect(() => {
@@ -38,11 +40,8 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
       if (!session?.user?.id) return;
       
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/users/${session.user.id}/stats`);
-        if (response.ok) {
-          const stats = await response.json();
-          setUserStats(stats);
-        }
+        const stats = await apiClient.getUserStats(session.user.id);
+        setUserStats(stats);
       } catch (err) {
         console.error('Error fetching user stats:', err);
       }
@@ -63,6 +62,10 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
     fetchConfig();
   }, [session?.user?.id]);
 
+  const validateSyncDays = (days: number): boolean => {
+    return days >= 1 && days <= 1095;
+  };
+
   const startIngestion = async (fullSync: boolean = false) => {
     if (!session?.user) {
       setError('Authentication required - no user session');
@@ -75,6 +78,11 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
       return;
     }
 
+    if (!validateSyncDays(syncDays)) {
+      setError(`Sync days must be between 1 and 1095 days. Current value: ${syncDays}`);
+      return;
+    }
+
     setIsIngesting(true);
     setError(null);
 
@@ -84,6 +92,7 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
         access_token: session.accessToken,
         refresh_token: session.refreshToken,
         full_sync: fullSync,
+        ...(fullSync && { sync_days: syncDays }), // Only include sync_days for full sync
       });
 
       // Start polling for status
@@ -100,11 +109,8 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
               // Refresh user stats after completion
               const fetchUserStats = async () => {
                 try {
-                  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/users/${userId}/stats`);
-                  if (response.ok) {
-                    const stats = await response.json();
-                    setUserStats(stats);
-                  }
+                  const stats = await apiClient.getUserStats(userId);
+                  setUserStats(stats);
                 } catch (err) {
                   console.error('Error fetching user stats:', err);
                 }
@@ -294,27 +300,83 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
           )}
         </button>
         
-        <button
-          onClick={() => startIngestion(true)}
-          disabled={isIngesting}
-          className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
-            isIngesting 
-              ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
-              : 'bg-white/10 text-white hover:bg-white/20 border border-white/20 hover:border-white/30'
-          }`}
-        >
-          {isIngesting ? (
-            <div className="flex items-center justify-center space-x-2">
-              <div className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></div>
-              <span>Syncing...</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center space-x-2">
-              <span>🔄</span>
-              <span>Full Sync</span>
+        <div className="flex-1 space-y-2">
+          <button
+            onClick={() => setShowSyncOptions(!showSyncOptions)}
+            disabled={isIngesting}
+            className={`w-full py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
+              isIngesting 
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+                : 'bg-white/10 text-white hover:bg-white/20 border border-white/20 hover:border-white/30'
+            }`}
+          >
+            {isIngesting ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></div>
+                <span>Syncing...</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>🔄</span>
+                <span>Full Sync ({syncDays} days)</span>
+                <span className={`transform transition-transform ${showSyncOptions ? 'rotate-180' : ''}`}>▼</span>
+              </div>
+            )}
+          </button>
+          
+          {showSyncOptions && !isIngesting && (
+            <div className="bg-white/5 rounded-lg p-3 border border-white/10 space-y-3">
+              <div className="text-sm text-white/80 font-medium">Select Sync Period:</div>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { value: 7, label: 'Last 7 days' },
+                  { value: 30, label: 'Last 30 days' },
+                  { value: 90, label: 'Last 90 days' },
+                  { value: 365, label: 'Full Year' }
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setSyncDays(option.value)}
+                    className={`p-2 rounded-lg text-sm transition-all ${
+                      syncDays === option.value
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-white/5 text-white/70 hover:bg-white/10'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="1095"
+                  value={syncDays}
+                  onChange={(e) => setSyncDays(Math.max(1, Math.min(1095, parseInt(e.target.value) || 30)))}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Custom days (1-1095)"
+                />
+                <button
+                  onClick={() => startIngestion(true)}
+                  disabled={!validateSyncDays(syncDays)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    validateSyncDays(syncDays)
+                      ? 'bg-gradient-to-r from-strava-orange to-primary-400 text-white hover:from-strava-orange/90 hover:to-primary-400/90'
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Start Sync
+                </button>
+              </div>
+              {!validateSyncDays(syncDays) && (
+                <div className="text-red-400 text-xs">
+                  ⚠️ Sync days must be between 1 and 1095 days
+                </div>
+              )}
             </div>
           )}
-        </button>
+        </div>
       </div>
 
       {/* Details Section */}

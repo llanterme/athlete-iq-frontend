@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { API_BASE_URL } from '@/lib/api';
 
 export function SessionDebug() {
   const { data: session } = useSession();
@@ -15,7 +16,7 @@ export function SessionDebug() {
     
     setTesting(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/test/strava-auth`, {
+      const response = await fetch(`${API_BASE_URL}/api/test/strava-auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

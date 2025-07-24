@@ -2,13 +2,25 @@
  * API client for communicating with the Athlete IQ backend
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Get API URL - in Next.js, process.env is replaced at build time
+// Development: Uses .env.development.local or .env.local
+// Production: Uses environment variables set in AWS Amplify Console
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+// Helper to detect if we're in development
+export const isDevelopment = process.env.NODE_ENV === 'development';
+
+// Log the API URL in development for debugging
+if (isDevelopment && typeof window !== 'undefined') {
+  console.log('API Base URL:', API_BASE_URL);
+}
 
 export interface IngestionRequest {
   user_id: string;
   access_token: string;
   refresh_token: string;
   full_sync?: boolean;
+  sync_days?: number; // Optional: 1-1095 days
 }
 
 export interface IngestionStatus {
