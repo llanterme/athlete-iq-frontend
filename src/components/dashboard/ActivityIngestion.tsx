@@ -170,19 +170,6 @@ export function ActivityIngestion({ onIngestionComplete }: ActivityIngestionProp
           </div>
           <div>
             <h2 className="text-xl font-bold text-white">Activity Sync</h2>
-            <p className="text-white/60 text-sm">
-              Sync your Strava activities for AI analysis
-              {config && (
-                <span className="ml-2 text-xs">
-                  ({config.sync_period_description})
-                  {config.is_test_mode && (
-                    <span className="ml-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs">
-                      TEST MODE
-                    </span>
-                  )}
-                </span>
-              )}
-            </p>
           </div>
         </div>
         
