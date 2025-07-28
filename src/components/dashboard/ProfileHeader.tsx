@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { StravaAthlete } from '@/types/strava';
 import { Card } from '@/components/ui/Card';
 import { formatDate } from '@/lib/strava';
+import { DeleteDataButton } from './DeleteDataButton';
 
 interface ProfileHeaderProps {
   athlete: StravaAthlete;
@@ -41,7 +42,7 @@ export function ProfileHeader({ athlete }: ProfileHeaderProps) {
           )}
           
           <div className="border-t border-white/20 pt-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
               <div>
                 <p className="text-white/60">Strava ID</p>
                 <p className="font-semibold">{athlete.id}</p>
@@ -62,6 +63,17 @@ export function ProfileHeader({ athlete }: ProfileHeaderProps) {
                   <p className="font-semibold">{athlete.friend_count}</p>
                 </div>
               )}
+            </div>
+            
+            {/* Data Management Section */}
+            <div className="border-t border-white/20 pt-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h4 className="text-white font-medium mb-1">Data Management</h4>
+                  <p className="text-white/60 text-sm">Permanently remove all your data from our systems</p>
+                </div>
+                <DeleteDataButton />
+              </div>
             </div>
           </div>
         </div>
