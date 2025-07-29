@@ -197,7 +197,7 @@ class ApiClient {
   }
 
   async getUserThresholds(userId: string): Promise<any> {
-    return this.request(`/api/fitness/${userId}/thresholds`);
+    return this.request(`/api/fitness/${userId}/thresholds?t=${Date.now()}`);
   }
 
   // Debug endpoint

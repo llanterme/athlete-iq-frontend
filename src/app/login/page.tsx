@@ -1,10 +1,35 @@
 'use client';
 
 import { signIn, getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+
+function LoginContent() {
+  const searchParams = useSearchParams();
+  const isDeleted = searchParams.get('deleted') === 'true';
+
+  return (
+    <>
+      {/* Data Deletion Confirmation */}
+      {isDeleted && (
+        <Card glass className="text-center mb-6 border-green-500/30">
+          <div className="space-y-4">
+            <div className="flex items-center justify-center space-x-3">
+              <span className="text-3xl">✅</span>
+              <h3 className="text-xl font-semibold text-green-400">Data Successfully Deleted</h3>
+            </div>
+            <p className="text-white/80">
+              All your data has been permanently removed from our systems. 
+              You can reconnect with Strava anytime to start fresh.
+            </p>
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +64,10 @@ export default function LoginPage() {
           <h1 className="text-4xl font-bold text-white mb-2">🏃 Athlete IQ</h1>
           <p className="text-white/80 text-lg">Your Personal Strava Fitness AI Assistant</p>
         </div>
+
+        <Suspense fallback={null}>
+          <LoginContent />
+        </Suspense>
 
         <Card glass className="text-center">
           <div className="space-y-6">

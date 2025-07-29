@@ -48,8 +48,9 @@ export function ThresholdEstimates({ thresholds }: ThresholdEstimatesProps) {
 
   // Format pace display
   const formatPace = (pace: number, unit: string) => {
-    const minutes = Math.floor(pace);
-    const seconds = Math.round((pace - minutes) * 60);
+    const totalSeconds = Math.round(pace * 60);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')} ${unit}`;
   };
 
@@ -130,7 +131,7 @@ export function ThresholdEstimates({ thresholds }: ThresholdEstimatesProps) {
               </div>
             </div>
             <div className="text-2xl font-bold text-white mb-1">
-              {running_threshold_pace ? formatPace(running_threshold_pace, 'min/km') : 'N/A'}
+              {running_threshold_pace ? `${running_threshold_pace} min/km` : 'N/A'}
             </div>
             <div className="text-white/60 text-sm mb-2">Running Critical Pace</div>
             <div className="text-white/40 text-xs">
@@ -156,7 +157,7 @@ export function ThresholdEstimates({ thresholds }: ThresholdEstimatesProps) {
               </div>
             </div>
             <div className="text-2xl font-bold text-white mb-1">
-              {swimming_threshold_pace ? formatPace(swimming_threshold_pace, 'min/100m') : 'N/A'}
+              {swimming_threshold_pace ? `${swimming_threshold_pace} min/100m` : 'N/A'}
             </div>
             <div className="text-white/60 text-sm mb-2">Critical Swim Speed</div>
             <div className="text-white/40 text-xs">
