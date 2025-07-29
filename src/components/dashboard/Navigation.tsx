@@ -17,6 +17,7 @@ export function Navigation() {
   const navigationItems = [
     { label: 'Dashboard', href: '/dashboard', icon: '📊' },
     { label: 'Race Calendar', href: '/races', icon: '🏁' },
+    { label: 'Profile', href: '/profile', icon: '👤' },
   ];
 
   return (

@@ -7,7 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { StravaAPI } from '../../lib/strava';
 import { StravaAthlete, StravaStats } from '../../types/strava';
 import { Navigation } from '../../components/dashboard/Navigation';
-import { ProfileHeader } from '../../components/dashboard/ProfileHeader';
 import { StatsGrid } from '../../components/dashboard/StatsGrid';
 import { ActivityIngestion } from '../../components/dashboard/ActivityIngestion';
 import { ChatInterface } from '../../components/chat/ChatInterface';
@@ -128,7 +127,6 @@ export default function DashboardPage() {
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
-          <ProfileHeader athlete={athlete} />
           <StatsGrid stats={stats} />
           
           {/* Next Race Widget */}
