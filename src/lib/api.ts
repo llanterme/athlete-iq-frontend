@@ -2,6 +2,8 @@
  * API client for communicating with the Athlete IQ backend
  */
 
+import { Race, CreateRaceRequest, UpdateRaceRequest } from '@/types/race';
+
 // Get API URL - in Next.js, process.env is replaced at build time
 // Development: Uses .env.development.local or .env.local
 // Production: Uses environment variables set in AWS Amplify Console
@@ -211,6 +213,36 @@ class ApiClient {
 
   async getLatestActivity(userId: string): Promise<any> {
     return this.request(`/api/activities/${userId}/latest`);
+  }
+
+  // Race API methods
+  async createRace(request: CreateRaceRequest): Promise<Race> {
+    return this.request('/api/races', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getUserRaces(userId: string, upcomingOnly?: boolean): Promise<Race[]> {
+    const params = upcomingOnly ? '?upcoming_only=true' : '';
+    return this.request(`/api/races/${userId}${params}`);
+  }
+
+  async getRace(userId: string, raceId: string): Promise<Race> {
+    return this.request(`/api/races/${userId}/${raceId}`);
+  }
+
+  async updateRace(userId: string, raceId: string, request: UpdateRaceRequest): Promise<Race> {
+    return this.request(`/api/races/${userId}/${raceId}`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async deleteRace(userId: string, raceId: string): Promise<{ message: string }> {
+    return this.request(`/api/races/${userId}/${raceId}`, {
+      method: 'DELETE',
+    });
   }
 }
 
