@@ -11,6 +11,7 @@ import { StatsGrid } from '../../components/dashboard/StatsGrid';
 import { ActivityIngestion } from '../../components/dashboard/ActivityIngestion';
 import { ChatInterface } from '../../components/chat/ChatInterface';
 import { FitnessDashboard } from '../../components/dashboard/FitnessDashboard';
+import { NextRaceWidget } from '../../components/races/NextRaceWidget';
 import { Button } from '../../components/ui/Button';
 
 export default function DashboardPage() {
@@ -127,6 +128,9 @@ export default function DashboardPage() {
         <div className="space-y-8">
           <ProfileHeader athlete={athlete} />
           <StatsGrid stats={stats} />
+          
+          {/* Next Race Widget */}
+          <NextRaceWidget onViewAllRaces={() => router.push('/races')} />
           
           {/* Activity Ingestion */}
           <ActivityIngestion onIngestionComplete={handleIngestionComplete} />
