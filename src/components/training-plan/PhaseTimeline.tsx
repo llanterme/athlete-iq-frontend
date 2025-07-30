@@ -44,69 +44,93 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
           
           {/* Phase blocks */}
           <div className="flex rounded-lg overflow-hidden" style={{ height: '80px' }}>
-            {phases.map((phase, index) => {
-              const phasePercent = (phase.weeks / totalWeeks) * 100;
-              const phaseColor = PHASE_COLORS[phase.phase_name];
-              
-              return (
-                <div
-                  key={index}
-                  className="relative flex items-center justify-center transition-all duration-200 hover:brightness-110"
-                  style={{
-                    width: `${phasePercent}%`,
-                    backgroundColor: phaseColor,
-                    minWidth: '60px'
-                  }}
-                >
-                  <div className="text-center text-white">
-                    <div className="font-semibold text-sm capitalize">
-                      {phase.phase_name}
+            {phases.length > 0 ? (
+              phases.map((phase, index) => {
+                // Ensure phase has required properties
+                if (!phase || !phase.phase_name || !phase.weeks) {
+                  return null;
+                }
+                
+                const phasePercent = (phase.weeks / totalWeeks) * 100;
+                const phaseColor = PHASE_COLORS[phase.phase_name];
+                
+                return (
+                  <div
+                    key={index}
+                    className="relative flex items-center justify-center transition-all duration-200 hover:brightness-110"
+                    style={{
+                      width: `${phasePercent}%`,
+                      backgroundColor: phaseColor,
+                      minWidth: '60px'
+                    }}
+                  >
+                    <div className="text-center text-white">
+                      <div className="font-semibold text-sm capitalize">
+                        {phase.phase_name}
+                      </div>
+                      <div className="text-xs opacity-90">
+                        {phase.weeks}w
+                      </div>
                     </div>
-                    <div className="text-xs opacity-90">
-                      {phase.weeks}w
-                    </div>
+                    
+                    {/* Phase separator */}
+                    {index < phases.length - 1 && (
+                      <div className="absolute right-0 top-0 w-px h-full bg-white/20"></div>
+                    )}
                   </div>
-                  
-                  {/* Phase separator */}
-                  {index < phases.length - 1 && (
-                    <div className="absolute right-0 top-0 w-px h-full bg-white/20"></div>
-                  )}
+                );
+              }).filter(Boolean)
+            ) : (
+              // Fallback when no phases are available
+              <div className="flex-1 bg-gray-500 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <div className="font-semibold text-sm">Training Plan</div>
+                  <div className="text-xs opacity-90">Loading phases...</div>
                 </div>
-              );
-            })}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Phase details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          {phases.map((phase, index) => (
-            <div
-              key={index}
-              className="p-4 bg-white/5 rounded-lg border-l-4 transition-all duration-200 hover:bg-white/10"
-              style={{ borderLeftColor: PHASE_COLORS[phase.phase_name] }}
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-white capitalize">
-                    {phase.phase_name} Phase
-                  </h4>
-                  <span className="text-xs text-white/60">
-                    {phase.weeks} weeks
-                  </span>
-                </div>
-                
-                <div className="text-xs text-white/70 space-y-1">
-                  <div>
-                    {format(parseISO(phase.start_date), 'MMM d')} - {format(parseISO(phase.end_date), 'MMM d')}
+        {phases.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            {phases.map((phase, index) => {
+              // Ensure phase has required properties
+              if (!phase || !phase.phase_name || !phase.start_date || !phase.end_date) {
+                return null;
+              }
+              
+              return (
+                <div
+                  key={index}
+                  className="p-4 bg-white/5 rounded-lg border-l-4 transition-all duration-200 hover:bg-white/10"
+                  style={{ borderLeftColor: PHASE_COLORS[phase.phase_name] }}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-white capitalize">
+                        {phase.phase_name} Phase
+                      </h4>
+                      <span className="text-xs text-white/60">
+                        {phase.weeks} weeks
+                      </span>
+                    </div>
+                    
+                    <div className="text-xs text-white/70 space-y-1">
+                      <div>
+                        {format(parseISO(phase.start_date), 'MMM d')} - {format(parseISO(phase.end_date), 'MMM d')}
+                      </div>
+                      <div className="text-white/80">
+                        {phase.focus}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-white/80">
-                    {phase.focus}
-                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            }).filter(Boolean)}
+          </div>
+        )}
 
         {/* Phase descriptions */}
         <div className="mt-6 p-4 bg-white/5 rounded-lg">
