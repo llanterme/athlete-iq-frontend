@@ -12,6 +12,7 @@ import { ActivityIngestion } from '../../components/dashboard/ActivityIngestion'
 import { ChatInterface } from '../../components/chat/ChatInterface';
 import { FitnessDashboard } from '../../components/dashboard/FitnessDashboard';
 import { NextRaceWidget } from '../../components/races/NextRaceWidget';
+import { TrainingPlanWidget } from '../../components/training-plan/TrainingPlanWidget';
 import { Button } from '../../components/ui/Button';
 
 export default function DashboardPage() {
@@ -129,8 +130,11 @@ export default function DashboardPage() {
         <div className="space-y-8">
           <StatsGrid stats={stats} />
           
-          {/* Next Race Widget */}
-          <NextRaceWidget onViewAllRaces={() => router.push('/races')} />
+          {/* Race and Training Plan Widgets */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <NextRaceWidget onViewAllRaces={() => router.push('/races')} />
+            <TrainingPlanWidget onViewAllPlans={() => router.push('/training-plan')} />
+          </div>
           
           {/* Activity Ingestion */}
           <ActivityIngestion onIngestionComplete={handleIngestionComplete} />

@@ -3,6 +3,12 @@
  */
 
 import { Race, CreateRaceRequest, UpdateRaceRequest } from '@/types/race';
+import { 
+  TrainingPlanRequest, 
+  TrainingPlanResponse, 
+  TrainingPlansListResponse, 
+  TrainingPlan 
+} from '@/types/training-plan';
 
 // Get API URL - in Next.js, process.env is replaced at build time
 // Development: Uses .env.development.local or .env.local
@@ -243,6 +249,23 @@ class ApiClient {
     return this.request(`/api/races/${userId}/${raceId}`, {
       method: 'DELETE',
     });
+  }
+
+  // Training Plan API methods
+  async generateTrainingPlan(request: TrainingPlanRequest): Promise<TrainingPlanResponse> {
+    return this.request('/api/training-plans/generate', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getUserTrainingPlans(userId: string, activeOnly?: boolean): Promise<TrainingPlansListResponse> {
+    const params = activeOnly ? '?active_only=true' : '';
+    return this.request(`/api/training-plans/${userId}${params}`);
+  }
+
+  async getTrainingPlanDetails(userId: string, planId: string): Promise<TrainingPlan> {
+    return this.request(`/api/training-plans/${userId}/${planId}`);
   }
 }
 
