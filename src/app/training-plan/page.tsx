@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigation } from '@/components/dashboard/Navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { TrainingPlanCard } from '@/components/training-plan/TrainingPlanCard';
 import { TrainingPlanForm } from '@/components/training-plan/TrainingPlanForm';
+import { DeletePlanModal } from '@/components/training-plan/DeletePlanModal';
 import { apiClient } from '@/lib/api';
 import { 
   addCountdownToTrainingPlans, 
@@ -23,8 +24,11 @@ export default function TrainingPlanPage() {
   
   const [showForm, setShowForm] = useState(false);
   const [showPastPlans, setShowPastPlans] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState<TrainingPlanWithCountdown | null>(null);
 
   const userId = session?.user?.id;
+  const queryClient = useQueryClient();
 
   const { data: trainingPlans, isLoading, error } = useQuery({
     queryKey: ['training-plans', userId],
@@ -60,6 +64,26 @@ export default function TrainingPlanPage() {
     },
     enabled: !!userId,
     retry: 1,
+  });
+
+  // Delete mutation
+  const deletePlanMutation = useMutation({
+    mutationFn: async (plan: TrainingPlanWithCountdown) => {
+      if (!userId || !plan.plan_id) throw new Error('User not authenticated or plan not found');
+      return apiClient.deleteTrainingPlan(userId, plan.plan_id);
+    },
+    onSuccess: () => {
+      // Invalidate training plans cache
+      queryClient.invalidateQueries({ queryKey: ['training-plans', userId] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans-widget', userId] });
+      // Close modal and reset state
+      setShowDeleteModal(false);
+      setPlanToDelete(null);
+    },
+    onError: (error: Error) => {
+      console.error('Delete plan error:', error);
+      // Keep modal open on error so user can see the error
+    },
   });
 
   // Handle authentication
@@ -115,6 +139,23 @@ export default function TrainingPlanPage() {
 
   const handlePlanClick = (planId: string) => {
     router.push(`/training-plan/${planId}`);
+  };
+
+  const handleDeletePlan = (plan: TrainingPlanWithCountdown) => {
+    setPlanToDelete(plan);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (planToDelete) {
+      deletePlanMutation.mutate(planToDelete);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setPlanToDelete(null);
+    deletePlanMutation.reset(); // Clear any previous errors
   };
 
   return (
@@ -195,6 +236,8 @@ export default function TrainingPlanPage() {
                   key={plan.plan_id}
                   plan={plan}
                   onClick={() => handlePlanClick(plan.plan_id)}
+                  onDelete={() => handleDeletePlan(plan)}
+                  isDeleting={deletePlanMutation.isPending && planToDelete?.plan_id === plan.plan_id}
                 />
               ))}
             </div>
@@ -250,6 +293,17 @@ export default function TrainingPlanPage() {
             // Refresh plans list
             // queryClient.invalidateQueries(['training-plans', userId]);
           }}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && planToDelete && (
+        <DeletePlanModal
+          plan={planToDelete}
+          isDeleting={deletePlanMutation.isPending}
+          error={deletePlanMutation.error}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
         />
       )}
     </div>

@@ -267,6 +267,12 @@ class ApiClient {
   async getTrainingPlanDetails(userId: string, planId: string): Promise<TrainingPlan> {
     return this.request(`/api/training-plans/${userId}/${planId}`);
   }
+
+  async deleteTrainingPlan(userId: string, planId: string): Promise<{ message: string }> {
+    return this.request(`/api/training-plans/${userId}/${planId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

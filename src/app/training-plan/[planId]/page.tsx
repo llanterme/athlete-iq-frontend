@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navigation } from '@/components/dashboard/Navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { PlanHeader } from '@/components/training-plan/PlanHeader';
 import { PhaseTimeline } from '@/components/training-plan/PhaseTimeline';
 import { WeeklyView } from '@/components/training-plan/WeeklyView';
+import { DeletePlanModal } from '@/components/training-plan/DeletePlanModal';
 import { apiClient } from '@/lib/api';
 import { addCountdownToTrainingPlans, generateWeekOptions } from '@/lib/training-plan-utils';
 
@@ -18,8 +19,10 @@ export default function TrainingPlanDetailPage() {
   const router = useRouter();
   const params = useParams();
   const planId = params.planId as string;
+  const queryClient = useQueryClient();
   
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const userId = session?.user?.id;
 
@@ -39,6 +42,34 @@ export default function TrainingPlanDetailPage() {
     enabled: !!userId && !!planId,
     retry: 1,
   });
+
+  // Delete mutation
+  const deletePlanMutation = useMutation({
+    mutationFn: async () => {
+      if (!userId || !planId) throw new Error('User not authenticated or plan not found');
+      return apiClient.deleteTrainingPlan(userId, planId);
+    },
+    onSuccess: () => {
+      // Invalidate training plans cache
+      queryClient.invalidateQueries({ queryKey: ['training-plans', userId] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans-widget', userId] });
+      // Redirect to training plans list
+      router.push('/training-plan');
+    },
+    onError: (error: Error) => {
+      console.error('Delete plan error:', error);
+      // Keep modal open on error so user can see the error
+    },
+  });
+
+  const handleDeleteConfirm = () => {
+    deletePlanMutation.mutate();
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    deletePlanMutation.reset(); // Clear any previous errors
+  };
 
   // Handle authentication
   if (status === 'loading') {
@@ -117,7 +148,7 @@ export default function TrainingPlanDetailPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
           {/* Back Navigation */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between">
             <Button
               onClick={() => router.push('/training-plan')}
               variant="ghost"
@@ -125,6 +156,15 @@ export default function TrainingPlanDetailPage() {
               className="text-white/70 hover:text-white"
             >
               ← Back to Plans
+            </Button>
+            
+            <Button
+              onClick={() => setShowDeleteModal(true)}
+              variant="ghost"
+              size="sm"
+              className="text-red-300 hover:text-red-200 hover:bg-red-500/20"
+            >
+              🗑️ Delete Plan
             </Button>
           </div>
 
@@ -266,6 +306,17 @@ export default function TrainingPlanDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && plan && (
+        <DeletePlanModal
+          plan={plan}
+          isDeleting={deletePlanMutation.isPending}
+          error={deletePlanMutation.error}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
     </div>
   );
 }

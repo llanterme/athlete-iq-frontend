@@ -12,9 +12,11 @@ import {
 interface TrainingPlanCardProps {
   plan: TrainingPlanWithCountdown;
   onClick: () => void;
+  onDelete?: () => void;
+  isDeleting?: boolean;
 }
 
-export function TrainingPlanCard({ plan, onClick }: TrainingPlanCardProps) {
+export function TrainingPlanCard({ plan, onClick, onDelete, isDeleting }: TrainingPlanCardProps) {
   const currentPhase = getCurrentPhase(plan);
   const progress = calculatePlanProgress(plan);
   const raceDate = parseISO(plan.race_date);
@@ -99,13 +101,34 @@ export function TrainingPlanCard({ plan, onClick }: TrainingPlanCardProps) {
           </div>
         </div>
 
-        {/* Action hint */}
+        {/* Actions */}
         <div className="flex items-center justify-between pt-2">
           <span className="text-white/50 text-xs">
             Click to view details
           </span>
-          <div className="text-white/30 group-hover:text-white/50 transition-colors">
-            →
+          <div className="flex items-center gap-2">
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent card click
+                  onDelete();
+                }}
+                disabled={isDeleting}
+                className="text-red-300 hover:text-red-200 transition-colors p-1 rounded hover:bg-red-500/20 disabled:opacity-50"
+                title="Delete training plan"
+              >
+                {isDeleting ? (
+                  <div className="w-4 h-4 animate-spin rounded-full border border-red-300 border-t-transparent"></div>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                )}
+              </button>
+            )}
+            <div className="text-white/30 group-hover:text-white/50 transition-colors">
+              →
+            </div>
           </div>
         </div>
       </div>
