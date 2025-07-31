@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/Card';
@@ -37,6 +37,17 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
   });
   const [errors, setErrors] = useState<string[]>([]);
 
+  // Handle Escape key press
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && currentStep !== 'generating') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onClose, currentStep]);
+
   const userId = session?.user?.id;
 
   // Fetch user races for race selection
@@ -58,7 +69,7 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
       const response = await apiClient.generateTrainingPlan(request);
       return response;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate training plans cache
       queryClient.invalidateQueries({ queryKey: ['training-plans', userId] });
       onSuccess();
@@ -140,8 +151,16 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
   const currentStepIndex = steps.findIndex(step => step.id === currentStep);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={(e) => {
+        // Close when clicking backdrop
+        if (e.target === e.currentTarget && currentStep !== 'generating') {
+          onClose();
+        }
+      }}
+    >
+      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <Card className="bg-white">
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b">
@@ -155,11 +174,15 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
             </div>
             <Button
               variant="ghost"
-              size="sm"
+              size="lg"
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center p-0"
+              aria-label="Close"
+              disabled={currentStep === 'generating'}
             >
-              ✕
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </Button>
           </div>
 
