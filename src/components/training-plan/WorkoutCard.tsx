@@ -35,18 +35,13 @@ export function WorkoutCard({ workout }: WorkoutCardProps) {
       <div className="p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="text-2xl">
-              {WORKOUT_TYPE_ICONS[workout.workout_type] || '🏃‍♂️'}
-            </div>
-            <div>
-              <h4 className="font-semibold text-white capitalize">
-                {workout.day_of_week}
-              </h4>
-              <p className="text-white/70 text-sm">
-                {format(workoutDate, 'MMM d')}
-              </p>
-            </div>
+          <div>
+            <h4 className="font-semibold text-white capitalize">
+              {workout.day_of_week}
+            </h4>
+            <p className="text-white/70 text-sm">
+              {format(workoutDate, 'MMM d')}
+            </p>
           </div>
           
           <div className="text-right">

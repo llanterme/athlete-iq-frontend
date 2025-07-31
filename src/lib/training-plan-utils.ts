@@ -105,11 +105,11 @@ export function formatWorkoutDuration(minutes: number): string {
 }
 
 /**
- * Format pace string (e.g., "4:30" to "4:30/km")
+ * Format pace string (API already includes units)
  */
 export function formatPace(pacePerKm?: string): string {
   if (!pacePerKm) return '';
-  return `${pacePerKm}/km`;
+  return pacePerKm;
 }
 
 /**

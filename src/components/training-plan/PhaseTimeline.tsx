@@ -2,15 +2,37 @@ import { format, parseISO } from 'date-fns';
 import { Card } from '@/components/ui/Card';
 import { TrainingPhase, PHASE_COLORS } from '@/types/training-plan';
 
+// Helper function to parse week ranges like "1-3" or "7" into week count
+function parseWeeksFromRange(weekRange: string): number {
+  if (weekRange.includes('-')) {
+    const [start, end] = weekRange.split('-').map(num => parseInt(num.trim()));
+    return end - start + 1;
+  }
+  return 1; // Single week
+}
+
 interface PhaseTimelineProps {
-  phases: TrainingPhase[];
+  phases: (TrainingPhase | any)[]; // Allow API response format
   currentWeek?: number;
   totalWeeks: number;
 }
 
 export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimelineProps) {
   if (!phases || phases.length === 0) {
-    return null;
+    return (
+      <Card glass className="p-6">
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Training Phases
+          </h3>
+          <div className="text-center py-8">
+            <p className="text-white/70 text-sm">
+              Phase data is loading or unavailable. Please check back later.
+            </p>
+          </div>
+        </div>
+      </Card>
+    );
   }
 
   // Calculate current progress as percentage
@@ -20,7 +42,7 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
     <Card glass className="p-6">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-white mb-4">
-          📅 Training Phases
+          Training Phases
         </h3>
         
         {/* Timeline visualization */}
@@ -44,51 +66,48 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
           
           {/* Phase blocks */}
           <div className="flex rounded-lg overflow-hidden" style={{ height: '80px' }}>
-            {phases.length > 0 ? (
-              phases.map((phase, index) => {
-                // Ensure phase has required properties
-                if (!phase || !phase.phase_name || !phase.weeks) {
-                  return null;
-                }
-                
-                const phasePercent = (phase.weeks / totalWeeks) * 100;
-                const phaseColor = PHASE_COLORS[phase.phase_name];
-                
-                return (
-                  <div
-                    key={index}
-                    className="relative flex items-center justify-center transition-all duration-200 hover:brightness-110"
-                    style={{
-                      width: `${phasePercent}%`,
-                      backgroundColor: phaseColor,
-                      minWidth: '60px'
-                    }}
-                  >
-                    <div className="text-center text-white">
-                      <div className="font-semibold text-sm capitalize">
-                        {phase.phase_name}
-                      </div>
-                      <div className="text-xs opacity-90">
-                        {phase.weeks}w
-                      </div>
+            {phases.map((phase, index) => {
+              // Handle both API response format and TrainingPhase interface
+              const phaseName = phase.phase_name || phase.name;
+              const phaseWeeks = typeof phase.weeks === 'string' 
+                ? parseWeeksFromRange(phase.weeks)
+                : phase.weeks;
+              
+              // Ensure phase has required properties
+              if (!phase || !phaseName || !phaseWeeks) {
+                console.warn('Phase missing required data:', phase);
+                return null;
+              }
+              
+              const phasePercent = (phaseWeeks / totalWeeks) * 100;
+              const phaseColor = PHASE_COLORS[phaseName.toLowerCase() as keyof typeof PHASE_COLORS] || '#6B7280'; // fallback color
+              
+              return (
+                <div
+                  key={index}
+                  className="relative flex items-center justify-center transition-all duration-200 hover:brightness-110"
+                  style={{
+                    width: `${phasePercent}%`,
+                    backgroundColor: phaseColor,
+                    minWidth: '60px'
+                  }}
+                >
+                  <div className="text-center text-white">
+                    <div className="font-semibold text-sm capitalize">
+                      {phaseName}
                     </div>
-                    
-                    {/* Phase separator */}
-                    {index < phases.length - 1 && (
-                      <div className="absolute right-0 top-0 w-px h-full bg-white/20"></div>
-                    )}
+                    <div className="text-xs opacity-90">
+                      {phaseWeeks}w
+                    </div>
                   </div>
-                );
-              }).filter(Boolean)
-            ) : (
-              // Fallback when no phases are available
-              <div className="flex-1 bg-gray-500 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <div className="font-semibold text-sm">Training Plan</div>
-                  <div className="text-xs opacity-90">Loading phases...</div>
+                  
+                  {/* Phase separator */}
+                  {index < phases.length - 1 && (
+                    <div className="absolute right-0 top-0 w-px h-full bg-white/20"></div>
+                  )}
                 </div>
-              </div>
-            )}
+              );
+            }).filter(Boolean)}
           </div>
         </div>
 
@@ -96,8 +115,15 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
         {phases.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             {phases.map((phase, index) => {
+              // Handle both API response format and TrainingPhase interface
+              const phaseName = phase.phase_name || phase.name;
+              const phaseWeeks = typeof phase.weeks === 'string' 
+                ? parseWeeksFromRange(phase.weeks)
+                : phase.weeks;
+              const weekRange = typeof phase.weeks === 'string' ? phase.weeks : `${phaseWeeks}`;
+              
               // Ensure phase has required properties
-              if (!phase || !phase.phase_name || !phase.start_date || !phase.end_date) {
+              if (!phase || !phaseName) {
                 return null;
               }
               
@@ -105,22 +131,24 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
                 <div
                   key={index}
                   className="p-4 bg-white/5 rounded-lg border-l-4 transition-all duration-200 hover:bg-white/10"
-                  style={{ borderLeftColor: PHASE_COLORS[phase.phase_name] }}
+                  style={{ borderLeftColor: PHASE_COLORS[phaseName.toLowerCase() as keyof typeof PHASE_COLORS] || '#6B7280' }}
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-white capitalize">
-                        {phase.phase_name} Phase
+                        {phaseName} Phase
                       </h4>
                       <span className="text-xs text-white/60">
-                        {phase.weeks} weeks
+                        Week{phaseWeeks > 1 ? 's' : ''} {weekRange}
                       </span>
                     </div>
                     
                     <div className="text-xs text-white/70 space-y-1">
-                      <div>
-                        {format(parseISO(phase.start_date), 'MMM d')} - {format(parseISO(phase.end_date), 'MMM d')}
-                      </div>
+                      {(phase.start_date && phase.end_date) ? (
+                        <div>
+                          {format(parseISO(phase.start_date), 'MMM d')} - {format(parseISO(phase.end_date), 'MMM d')}
+                        </div>
+                      ) : null}
                       <div className="text-white/80">
                         {phase.focus}
                       </div>
