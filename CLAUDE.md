@@ -32,16 +32,26 @@ This is the **frontend-only** repository for Athlete IQ, a web application that 
 │   │   ├── api/auth/           # NextAuth endpoints
 │   │   ├── dashboard/          # Main dashboard page
 │   │   ├── login/              # Login page
+│   │   ├── profile/            # User profile page
+│   │   ├── races/              # Race management
+│   │   ├── training-plan/      # Training plan pages
 │   │   └── layout.tsx          # Root layout
 │   ├── components/             # React components
 │   │   ├── chat/               # Chat interface components
 │   │   ├── dashboard/          # Dashboard components
+│   │   ├── profile/            # Profile components
+│   │   ├── races/              # Race management components
+│   │   ├── training-plan/      # Training plan components
 │   │   └── ui/                 # Reusable UI components
 │   ├── lib/                    # Utilities and API clients
 │   │   ├── api.ts              # Backend API client
 │   │   ├── auth.ts             # NextAuth configuration
-│   │   └── strava.ts           # Strava API utilities
+│   │   ├── strava.ts           # Strava API utilities
+│   │   └── training-plan-utils.ts # Training plan utilities
 │   └── types/                  # TypeScript type definitions
+│       ├── race.ts             # Race type definitions
+│       ├── strava.ts           # Strava data types
+│       └── training-plan.ts    # Training plan types
 ├── public/                     # Static assets
 ├── .env.local                  # Environment variables (local)
 ├── next.config.js              # Next.js configuration
@@ -69,6 +79,14 @@ This is the **frontend-only** repository for Athlete IQ, a web application that 
 - ✅ Real-time conversational AI with typing indicators
 - ✅ Smooth animations and transitions
 - ✅ Context-aware fitness insights
+
+### Training Plans
+- ✅ AI-generated personalized training plans for races
+- ✅ Interactive phase timeline visualization (Base, Build, Peak, Taper)
+- ✅ Weekly workout scheduling with detailed descriptions
+- ✅ Workout cards with target metrics, pacing, and instructions
+- ✅ Training plan management (create, view, delete)
+- ✅ Race-specific periodization strategies
 
 ### Data Visualization
 - ✅ Advanced fitness metrics calculations
@@ -149,6 +167,8 @@ This frontend connects to a separate Python FastAPI backend that provides:
 - Strava data synchronization and processing
 - Vector database integration with Pinecone
 - AI-powered fitness insights with OpenAI GPT-4
+- AI-generated personalized training plans
+- Race management and goal tracking
 
 **Backend Repository:** [Link to backend repo when available]
 
@@ -184,10 +204,20 @@ This project uses standard Next.js path aliases (`@/*` = `src/*`). If you encoun
 - Check environment variables are properly set
 - Ensure NEXTAUTH_SECRET is generated and consistent
 
+### Training Plan Issues
+- Phase timeline requires phases data with `name` and `weeks` properties
+- Workout cards expect specific pace format from API (already includes units)
+- Ensure API response matches expected training plan structure
+
 ### Build Errors
 - Run `npm run type-check` to catch TypeScript issues
 - Verify all environment variables are set
 - Check for missing dependencies
+
+### UI/UX Notes
+- Emoji icons have been removed from workout cards and training phases for cleaner design
+- Components handle both API response format and internal TypeScript interfaces
+- Phase timeline auto-parses week ranges like "1-3" into week counts
 
 ## Contributing
 

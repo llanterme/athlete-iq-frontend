@@ -209,16 +209,16 @@ export const DAYS_OF_WEEK = [
 ] as const;
 
 export const WORKOUT_TYPE_ICONS: Record<WorkoutType, string> = {
-  endurance: '🚴‍♂️',
-  tempo: '⚡',
-  intervals: '💨',
-  recovery: '🧘‍♂️',
-  strength: '💪',
-  race_pace: '🏁',
-  long_run: '🏃‍♂️',
-  brick: '🧱',
-  technique: '🎯',
-  rest: '😴'
+  endurance: '',
+  tempo: '',
+  intervals: '',
+  recovery: '',
+  strength: '',
+  race_pace: '',
+  long_run: '',
+  brick: '',
+  technique: '',
+  rest: ''
 };
 
 export const PHASE_COLORS: Record<WorkoutPhase, string> = {
