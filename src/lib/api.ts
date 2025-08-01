@@ -5,7 +5,6 @@
 import { Race, CreateRaceRequest, UpdateRaceRequest } from '@/types/race';
 import { 
   TrainingPlanRequest, 
-  TrainingPlanResponse, 
   TrainingPlansListResponse, 
   TrainingPlan 
 } from '@/types/training-plan';
@@ -88,6 +87,35 @@ export interface ChatMessage {
 export interface InsightsRequest {
   user_id: string;
   time_period?: string;
+}
+
+// Training Plan Job Types
+export interface TrainingPlanJob {
+  job_id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  message: string;
+  created_at: string;
+  estimated_duration_seconds: number;
+}
+
+export interface TrainingPlanJobStatus {
+  job_id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  progress: number; // 0-100
+  current_step: string;
+  created_at: string;
+  started_at: string | null;
+  updated_at: string;
+  completed_at: string | null;
+  estimated_completion: string | null;
+  retry_count: number;
+  error_message: string | null;
+  result_plan_id: string | null;
+}
+
+export interface TrainingPlanJobsListResponse {
+  user_id: string;
+  jobs: TrainingPlanJobStatus[];
 }
 
 class ApiClient {
@@ -252,11 +280,30 @@ class ApiClient {
   }
 
   // Training Plan API methods
-  async generateTrainingPlan(request: TrainingPlanRequest): Promise<TrainingPlanResponse> {
+  async generateTrainingPlan(request: TrainingPlanRequest): Promise<TrainingPlanJob> {
     return this.request('/api/training-plans/generate', {
       method: 'POST',
       body: JSON.stringify(request),
     });
+  }
+
+  async getTrainingPlanJobStatus(jobId: string, userId: string): Promise<TrainingPlanJobStatus> {
+    return this.request(`/api/training-plans/jobs/${jobId}/status?user_id=${userId}`);
+  }
+
+  async getUserTrainingPlanJobs(userId: string, status?: string): Promise<TrainingPlanJobsListResponse> {
+    const params = status ? `?status=${status}` : '';
+    return this.request(`/api/training-plans/jobs/${userId}${params}`);
+  }
+
+  async cancelTrainingPlanJob(jobId: string, userId: string): Promise<{ message: string }> {
+    return this.request(`/api/training-plans/jobs/${jobId}/cancel?user_id=${userId}`, {
+      method: 'POST',
+    });
+  }
+
+  async getTrainingPlanJobResult(jobId: string, userId: string): Promise<TrainingPlan> {
+    return this.request(`/api/training-plans/jobs/${jobId}/result?user_id=${userId}`);
   }
 
   async getUserTrainingPlans(userId: string, activeOnly?: boolean): Promise<TrainingPlansListResponse> {

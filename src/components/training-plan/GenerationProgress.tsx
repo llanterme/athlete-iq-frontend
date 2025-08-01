@@ -1,63 +1,59 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { apiClient, TrainingPlanJobStatus } from '@/lib/api';
 
 interface GenerationProgressProps {
   isGenerating: boolean;
+  jobId: string | null;
+  userId: string | undefined;
   error?: string;
   onRetry: () => void;
 }
 
-const progressSteps = [
-  { message: "Analyzing your fitness profile...", duration: 2000 },
-  { message: "Selecting optimal race preparation strategy...", duration: 3000 },
-  { message: "Creating periodized training phases...", duration: 4000 },
-  { message: "Generating weekly workout schedules...", duration: 3000 },
-  { message: "Optimizing workout intensity and volume...", duration: 2000 },
-  { message: "Adding structured workout details...", duration: 2000 },
-  { message: "Finalizing your personalized plan...", duration: 1000 }
-];
+// Progress messages mapped to progress ranges
+const getProgressMessage = (progress: number): string => {
+  if (progress === 0) return "Starting training plan generation...";
+  if (progress < 10) return "Starting training plan generation...";
+  if (progress < 40) return "Race entry validated...";
+  if (progress < 50) return "Fitness data and training history analyzed...";
+  if (progress < 55) return "Training context prepared, consulting AI coach...";
+  if (progress < 90) return "Generating personalized training plan...";
+  if (progress < 95) return "AI training plan received, structuring...";
+  if (progress < 100) return "Training plan structured, saving to database...";
+  return "Training plan completed successfully!";
+};
 
-export function GenerationProgress({ isGenerating, error, onRetry }: GenerationProgressProps) {
-  const [currentStep, setCurrentStep] = useState(0);
+export function GenerationProgress({ isGenerating, jobId, userId, error, onRetry }: GenerationProgressProps) {
+  const [jobStatus, setJobStatus] = useState<TrainingPlanJobStatus | null>(null);
   const [progress, setProgress] = useState(0);
+  const [currentMessage, setCurrentMessage] = useState("Starting training plan generation...");
 
+  // Poll job status when we have a jobId
   useEffect(() => {
-    if (!isGenerating) return;
+    if (!isGenerating || !jobId || !userId) return;
 
-    let stepIndex = 0;
-    let totalElapsed = 0;
-    
-    const advanceStep = () => {
-      if (stepIndex < progressSteps.length - 1) {
-        stepIndex++;
-        setCurrentStep(stepIndex);
-        
-        setTimeout(advanceStep, progressSteps[stepIndex].duration);
+    const pollInterval = setInterval(async () => {
+      try {
+        const status = await apiClient.getTrainingPlanJobStatus(jobId, userId);
+        setJobStatus(status);
+        setProgress(status.progress);
+        setCurrentMessage(status.current_step || getProgressMessage(status.progress));
+      } catch (err) {
+        // Silently handle polling errors - the parent component will handle retries
       }
-    };
-
-    // Start with first step
-    setCurrentStep(0);
-    setTimeout(advanceStep, progressSteps[0].duration);
-
-    // Update progress bar
-    const progressInterval = setInterval(() => {
-      totalElapsed += 100;
-      const progressPercent = Math.min(95, (totalElapsed / 20000) * 100); // Cap at 95% until complete
-      setProgress(progressPercent);
-    }, 100);
+    }, 1000); // Poll every second for smoother progress updates
 
     return () => {
-      clearInterval(progressInterval);
+      clearInterval(pollInterval);
     };
-  }, [isGenerating]);
+  }, [isGenerating, jobId, userId]);
 
   useEffect(() => {
     if (!isGenerating && !error) {
       // Complete the progress when generation is done
       setProgress(100);
-      setCurrentStep(progressSteps.length - 1);
+      setCurrentMessage("Training plan completed successfully!");
     }
   }, [isGenerating, error]);
 
@@ -126,32 +122,28 @@ export function GenerationProgress({ isGenerating, error, onRetry }: GenerationP
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-tertiary-600 mr-3"></div>
             <p className="text-tertiary-800 font-medium">
-              {progressSteps[currentStep]?.message || "Processing..."}
+              {currentMessage}
             </p>
           </div>
         </Card>
       </div>
 
-      {/* Steps Progress */}
-      <div className="mt-8 max-w-2xl mx-auto">
-        <div className="flex flex-wrap justify-center gap-2">
-          {progressSteps.map((step, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                index <= currentStep 
-                  ? 'bg-tertiary-500' 
-                  : 'bg-gray-300'
-              }`}
-            />
-          ))}
+      {/* Job Details (for debugging - can be removed in production) */}
+      {jobStatus && process.env.NODE_ENV === 'development' && (
+        <div className="mt-4 text-xs text-gray-500 text-center">
+          <p>Job ID: {jobId}</p>
+          <p>Status: {jobStatus.status}</p>
+          {jobStatus.retry_count > 0 && <p>Retry: {jobStatus.retry_count}</p>}
         </div>
-      </div>
+      )}
 
       {/* Estimated Time */}
       <div className="mt-6">
         <p className="text-sm text-gray-500">
-          Estimated time: 10-30 seconds
+          {jobStatus?.estimated_completion 
+            ? `Estimated completion: ${new Date(jobStatus.estimated_completion).toLocaleTimeString()}`
+            : 'Estimated time: 30-60 seconds'
+          }
         </p>
         <p className="text-xs text-gray-400 mt-1">
           Complex plans may take longer to optimize

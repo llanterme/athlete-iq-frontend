@@ -36,8 +36,13 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
     include_cross_training: false
   });
   const [errors, setErrors] = useState<string[]>([]);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [jobStatus, setJobStatus] = useState<string | null>(null);
+  const [pollTimeoutId, setPollTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
-  // Handle Escape key press
+  const userId = session?.user?.id;
+
+  // Handle Escape key press and cleanup
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && currentStep !== 'generating') {
@@ -45,10 +50,15 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
       }
     };
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose, currentStep]);
-
-  const userId = session?.user?.id;
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      // Cleanup polling on unmount
+      if (pollTimeoutId) {
+        clearTimeout(pollTimeoutId);
+      }
+    };
+  }, [onClose, currentStep, pollTimeoutId]);
 
   // Fetch user races for race selection
   const { data: races, isLoading: racesLoading } = useQuery({
@@ -66,19 +76,80 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
 
   const generatePlanMutation = useMutation({
     mutationFn: async (request: TrainingPlanRequest) => {
-      const response = await apiClient.generateTrainingPlan(request);
-      return response;
+      const jobResponse = await apiClient.generateTrainingPlan(request);
+      setJobId(jobResponse.job_id);
+      return jobResponse;
     },
-    onSuccess: () => {
-      // Invalidate training plans cache
-      queryClient.invalidateQueries({ queryKey: ['training-plans', userId] });
-      onSuccess();
+    onSuccess: async (jobResponse) => {
+      // Start polling for job status
+      pollJobStatus(jobResponse.job_id);
     },
     onError: (error: Error) => {
       setErrors([error.message]);
       setCurrentStep('equipment'); // Go back to last step
+      setJobId(null);
+      setJobStatus(null);
     },
   });
+
+  const pollJobStatus = async (jobId: string) => {
+    if (!userId) return;
+
+    const pollInterval = 2000; // Poll every 2 seconds
+    const maxPolls = 60; // Max 2 minutes
+    let polls = 0;
+
+    const poll = async () => {
+      try {
+        const status = await apiClient.getTrainingPlanJobStatus(jobId, userId);
+        setJobStatus(status.status);
+
+        if (status.status === 'completed' && status.result_plan_id) {
+          // Job completed successfully
+          queryClient.invalidateQueries({ queryKey: ['training-plans', userId] });
+          onSuccess();
+          return;
+        }
+
+        if (status.status === 'failed') {
+          setErrors([status.error_message || 'Training plan generation failed']);
+          setCurrentStep('equipment');
+          setJobId(null);
+          setJobStatus(null);
+          return;
+        }
+
+        if (status.status === 'cancelled') {
+          setErrors(['Training plan generation was cancelled']);
+          setCurrentStep('equipment');
+          setJobId(null);
+          setJobStatus(null);
+          return;
+        }
+
+        // Continue polling if still processing
+        if ((status.status === 'pending' || status.status === 'processing') && polls < maxPolls) {
+          polls++;
+          const timeoutId = setTimeout(poll, pollInterval);
+          setPollTimeoutId(timeoutId);
+        } else if (polls >= maxPolls) {
+          setErrors(['Training plan generation timed out. Please try again.']);
+          setCurrentStep('equipment');
+          setJobId(null);
+          setJobStatus(null);
+          setPollTimeoutId(null);
+        }
+      } catch (error) {
+        setErrors(['Failed to check job status. Please try again.']);
+        setCurrentStep('equipment');
+        setJobId(null);
+        setJobStatus(null);
+      }
+    };
+
+    // Start polling
+    poll();
+  };
 
   const handleStepComplete = (stepData: Partial<TrainingPlanFormData>) => {
     const updatedData = { ...formData, ...stepData };
@@ -153,9 +224,16 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
   return (
     <div 
       className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={(e) => {
+      onClick={async (e) => {
         // Close when clicking backdrop
-        if (e.target === e.currentTarget && currentStep !== 'generating') {
+        if (e.target === e.currentTarget) {
+          if (currentStep === 'generating' && jobId && userId) {
+            try {
+              await apiClient.cancelTrainingPlanJob(jobId, userId);
+            } catch (err) {
+              // Silently fail - we're closing anyway
+            }
+          }
           onClose();
         }
       }}
@@ -175,10 +253,19 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
             <Button
               variant="ghost"
               size="lg"
-              onClick={onClose}
+              onClick={async () => {
+                // Cancel job if in progress
+                if (currentStep === 'generating' && jobId && userId) {
+                  try {
+                    await apiClient.cancelTrainingPlanJob(jobId, userId);
+                  } catch (err) {
+                    // Silently fail - we're closing anyway
+                  }
+                }
+                onClose();
+              }}
               className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center p-0"
               aria-label="Close"
-              disabled={currentStep === 'generating'}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -261,7 +348,9 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
 
             {currentStep === 'generating' && (
               <GenerationProgress
-                isGenerating={generatePlanMutation.isPending}
+                isGenerating={generatePlanMutation.isPending || jobStatus === 'pending' || jobStatus === 'processing'}
+                jobId={jobId}
+                userId={userId}
                 error={generatePlanMutation.error?.message}
                 onRetry={() => {
                   if (formData.race_id) {
