@@ -43,30 +43,30 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-semibold text-gray-200 mb-2">
           Equipment & Preferences
         </h3>
-        <p className="text-gray-600">
+        <p className="text-gray-400">
           Tell us about your available equipment and training preferences to create the most suitable plan.
         </p>
       </div>
 
       {/* Available Equipment */}
       <Card className="p-6">
-        <h4 className="font-medium text-gray-900 mb-4">Available Equipment</h4>
-        <p className="text-sm text-gray-600 mb-4">
+        <h4 className="font-medium text-gray-200 mb-4">Available Equipment</h4>
+        <p className="text-sm text-gray-400 mb-4">
           Select all equipment you have access to. This helps us tailor workouts to your setup.
         </p>
         
         <div className="space-y-6">
           {Object.entries(equipmentCategories).map(([category, equipmentList]) => (
             <div key={category}>
-              <h5 className="text-sm font-medium text-gray-700 mb-3">{category}</h5>
+              <h5 className="text-sm font-medium text-gray-300 mb-3">{category}</h5>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {equipmentList.map((equipment) => (
                   <label
                     key={equipment}
-                    className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="flex items-center p-3 border border-navy-600 rounded-lg cursor-pointer hover:bg-navy-700/30 transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -76,8 +76,8 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
                     />
                     <div className={`w-5 h-5 border-2 rounded flex items-center justify-center mr-3 transition-colors ${
                       (formData.available_equipment || []).includes(equipment)
-                        ? 'bg-tertiary-500 border-tertiary-500'
-                        : 'border-gray-300'
+                        ? 'bg-orange-500 border-orange-500'
+                        : 'border-navy-600'
                     }`}>
                       {(formData.available_equipment || []).includes(equipment) && (
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -85,7 +85,7 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
                         </svg>
                       )}
                     </div>
-                    <span className="text-gray-900">{EQUIPMENT_OPTIONS[equipment]}</span>
+                    <span className="text-gray-200">{EQUIPMENT_OPTIONS[equipment]}</span>
                   </label>
                 ))}
               </div>
@@ -96,10 +96,10 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
 
       {/* Environment & Safety */}
       <Card className="p-6">
-        <h4 className="font-medium text-gray-900 mb-4">Training Environment</h4>
+        <h4 className="font-medium text-gray-200 mb-4">Training Environment</h4>
         
         <div className="space-y-4">
-          <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+          <label className="flex items-center p-3 border border-navy-600 rounded-lg cursor-pointer hover:bg-navy-700/30 transition-colors">
             <input
               type="checkbox"
               checked={formData.safe_outdoor_routes}
@@ -108,8 +108,8 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
             />
             <div className={`w-5 h-5 border-2 rounded flex items-center justify-center mr-3 transition-colors ${
               formData.safe_outdoor_routes
-                ? 'bg-tertiary-500 border-tertiary-500'
-                : 'border-gray-300'
+                ? 'bg-orange-500 border-orange-500'
+                : 'border-navy-600'
             }`}>
               {formData.safe_outdoor_routes && (
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -118,8 +118,8 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
               )}
             </div>
             <div>
-              <span className="text-gray-900 font-medium">Safe outdoor training routes available</span>
-              <p className="text-sm text-gray-600">I have access to safe roads, trails, or paths for outdoor training</p>
+              <span className="text-gray-200 font-medium">Safe outdoor training routes available</span>
+              <p className="text-sm text-gray-400">I have access to safe roads, trails, or paths for outdoor training</p>
             </div>
           </label>
         </div>
@@ -127,10 +127,10 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
 
       {/* Training Preferences */}
       <Card className="p-6">
-        <h4 className="font-medium text-gray-900 mb-4">Training Preferences</h4>
+        <h4 className="font-medium text-gray-200 mb-4">Training Preferences</h4>
         
         <div className="space-y-4">
-          <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+          <label className="flex items-center p-3 border border-navy-600 rounded-lg cursor-pointer hover:bg-navy-700/30 transition-colors">
             <input
               type="checkbox"
               checked={formData.include_strength_training}
@@ -139,8 +139,8 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
             />
             <div className={`w-5 h-5 border-2 rounded flex items-center justify-center mr-3 transition-colors ${
               formData.include_strength_training
-                ? 'bg-tertiary-500 border-tertiary-500'
-                : 'border-gray-300'
+                ? 'bg-orange-500 border-orange-500'
+                : 'border-navy-600'
             }`}>
               {formData.include_strength_training && (
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -149,12 +149,12 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
               )}
             </div>
             <div>
-              <span className="text-gray-900 font-medium">Include strength training</span>
-              <p className="text-sm text-gray-600">Add dedicated strength/resistance training sessions to complement your sport-specific training</p>
+              <span className="text-gray-200 font-medium">Include strength training</span>
+              <p className="text-sm text-gray-400">Add dedicated strength/resistance training sessions to complement your sport-specific training</p>
             </div>
           </label>
 
-          <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+          <label className="flex items-center p-3 border border-navy-600 rounded-lg cursor-pointer hover:bg-navy-700/30 transition-colors">
             <input
               type="checkbox"
               checked={formData.include_cross_training}
@@ -163,8 +163,8 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
             />
             <div className={`w-5 h-5 border-2 rounded flex items-center justify-center mr-3 transition-colors ${
               formData.include_cross_training
-                ? 'bg-tertiary-500 border-tertiary-500'
-                : 'border-gray-300'
+                ? 'bg-orange-500 border-orange-500'
+                : 'border-navy-600'
             }`}>
               {formData.include_cross_training && (
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -173,30 +173,30 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
               )}
             </div>
             <div>
-              <span className="text-gray-900 font-medium">Include cross-training activities</span>
-              <p className="text-sm text-gray-600">Add variety with activities like yoga, swimming, or other sports to prevent overuse injuries</p>
+              <span className="text-gray-200 font-medium">Include cross-training activities</span>
+              <p className="text-sm text-gray-400">Add variety with activities like yoga, swimming, or other sports to prevent overuse injuries</p>
             </div>
           </label>
         </div>
       </Card>
 
       {/* Summary */}
-      <Card className="p-6 bg-blue-50 border-blue-200">
+      <Card className="p-6 bg-blue-950/20 border-blue-900/50">
         <div className="flex items-start">
           <div className="text-blue-400 text-lg mr-3">💡</div>
-          <div className="text-sm text-blue-800">
+          <div className="text-sm text-blue-300">
             <p className="font-medium mb-2">AI Training Plan Generation</p>
-            <p className="text-blue-700 mb-2">
+            <p className="text-blue-400 mb-2">
               Based on your inputs, our AI will create a personalized training plan that:
             </p>
-            <ul className="space-y-1 text-blue-700">
+            <ul className="space-y-1 text-blue-400">
               <li>• Adapts to your available equipment and schedule</li>
               <li>• Progressively builds fitness toward your race date</li>
               <li>• Accounts for your experience level and constraints</li>
               <li>• Includes periodization with base, build, peak, and taper phases</li>
               <li>• Provides detailed workout instructions and target metrics</li>
             </ul>
-            <p className="text-blue-600 mt-3 text-xs">
+            <p className="text-blue-400 mt-3 text-xs">
               Generation typically takes 10-30 seconds depending on plan complexity
             </p>
           </div>
@@ -216,7 +216,7 @@ export function EquipmentPreferences({ data, onNext, onBack }: EquipmentPreferen
           onClick={handleNext}
           variant="primary"
           size="lg"
-          className="bg-gradient-to-r from-tertiary-500 to-tertiary-600 hover:from-tertiary-600 hover:to-tertiary-700"
+          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
         >
           🤖 Generate Training Plan
         </Button>
