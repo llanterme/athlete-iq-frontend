@@ -28,10 +28,10 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
   if (loading) {
     return (
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Select Your Race</h3>
+        <h3 className="text-lg font-semibold text-gray-200">Select Your Race</h3>
         <div className="animate-pulse space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-20 bg-gray-200 rounded-lg"></div>
+            <div key={i} className="h-20 bg-navy-800/50 rounded-lg"></div>
           ))}
         </div>
       </div>
@@ -54,10 +54,10 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
     return (
       <div className="text-center py-8">
         <div className="text-6xl mb-4">🏁</div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-semibold text-gray-200 mb-2">
           No Upcoming Races Found
         </h3>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-400 mb-6">
           You need to add a race before creating a training plan. 
         </p>
         <Button
@@ -71,12 +71,12 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 training-plan-form">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-semibold text-gray-200 mb-2">
           Select Your Race
         </h3>
-        <p className="text-gray-600">
+        <p className="text-gray-400">
           Choose the race you want to train for. Your training plan will be tailored to this specific event.
         </p>
       </div>
@@ -92,8 +92,8 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
               key={race.id}
               className={`cursor-pointer transition-all duration-200 ${
                 isSelected 
-                  ? 'ring-2 ring-tertiary-500 bg-tertiary-50' 
-                  : 'hover:bg-gray-50'
+                  ? 'ring-2 ring-orange-500 bg-orange-950/20' 
+                  : 'hover:bg-navy-800/30'
               }`}
               onClick={() => setSelected(parseInt(race.id))}
             >
@@ -103,10 +103,10 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
                     {RACE_TYPE_ICONS[race.race_type] || '🏃‍♂️'}
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-medium text-gray-200">
                       {race.race_type}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-400">
                       {format(raceDate, 'EEEE, MMMM d, yyyy')}
                     </p>
                   </div>
@@ -123,14 +123,14 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
                     {daysUntil} days away
                   </div>
                   {daysUntil < 60 && (
-                    <p className="text-xs text-orange-600 mt-1">
+                    <p className="text-xs text-orange-400 mt-1">
                       Short preparation time
                     </p>
                   )}
                 </div>
                 
                 {isSelected && (
-                  <div className="ml-4 text-tertiary-500">
+                  <div className="ml-4 text-orange-500">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
@@ -143,12 +143,12 @@ export function RaceSelectionStep({ races, loading, selectedRaceId, onNext }: Ra
       </div>
 
       {upcomingRaces.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-950/20 border border-blue-900/50 rounded-lg p-4">
           <div className="flex items-start">
             <div className="text-blue-400 text-lg mr-3">💡</div>
-            <div className="text-sm text-blue-800">
+            <div className="text-sm text-blue-300">
               <p className="font-medium mb-1">Training Plan Tips:</p>
-              <ul className="space-y-1 text-blue-700">
+              <ul className="space-y-1 text-blue-400">
                 <li>• Plans work best with 12+ weeks of preparation time</li>
                 <li>• Consider your current fitness level when selecting races</li>
                 <li>• You can create multiple plans for different races</li>

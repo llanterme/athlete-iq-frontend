@@ -223,7 +223,7 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
 
   return (
     <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={async (e) => {
         // Close when clicking backdrop
         if (e.target === e.currentTarget) {
@@ -239,14 +239,14 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
       }}
     >
       <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <Card className="bg-white">
+        <Card className="bg-navy-900/95 border border-navy-700 training-plan-form">
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-gray-100">
                 Create Training Plan
               </h2>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-400 mt-1">
                 Let AI generate a personalized training plan for your race
               </p>
             </div>
@@ -264,7 +264,7 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
                 }
                 onClose();
               }}
-              className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center p-0"
+              className="text-gray-400 hover:text-gray-200 hover:bg-navy-800 rounded-full w-10 h-10 flex items-center justify-center p-0"
               aria-label="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,21 +280,21 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
                 <div key={step.id} className="flex items-center">
                   <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
                     index <= currentStepIndex
-                      ? 'bg-tertiary-500 border-tertiary-500 text-white'
-                      : 'border-gray-300 text-gray-400'
+                      ? 'bg-orange-500 border-orange-500 text-white'
+                      : 'border-gray-600 text-gray-500'
                   }`}>
                     <span className="text-sm">{step.icon}</span>
                   </div>
                   <div className="ml-3 hidden sm:block">
                     <p className={`text-sm font-medium ${
-                      index <= currentStepIndex ? 'text-tertiary-600' : 'text-gray-400'
+                      index <= currentStepIndex ? 'text-orange-400' : 'text-gray-500'
                     }`}>
                       {step.label}
                     </p>
                   </div>
                   {index < steps.length - 1 && (
                     <div className={`hidden sm:block w-12 h-px mx-4 ${
-                      index < currentStepIndex ? 'bg-tertiary-500' : 'bg-gray-300'
+                      index < currentStepIndex ? 'bg-orange-500' : 'bg-gray-600'
                     }`} />
                   )}
                 </div>
@@ -304,12 +304,12 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
 
           {/* Error Messages */}
           {errors.length > 0 && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-6 p-4 bg-red-950/30 border border-red-900/50 rounded-lg">
               <div className="flex items-start">
                 <div className="text-red-400 text-xl mr-3">⚠️</div>
                 <div className="flex-1">
-                  <h3 className="text-red-800 font-medium mb-2">Please fix the following errors:</h3>
-                  <ul className="text-red-700 text-sm space-y-1">
+                  <h3 className="text-red-400 font-medium mb-2">Please fix the following errors:</h3>
+                  <ul className="text-red-300 text-sm space-y-1">
                     {errors.map((error, index) => (
                       <li key={index}>• {error}</li>
                     ))}

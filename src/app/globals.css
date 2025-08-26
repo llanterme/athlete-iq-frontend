@@ -3,38 +3,315 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Custom CSS variables for dynamic theming */
+    --fitness-primary: theme('colors.fitness.navy.800');
+    --fitness-secondary: theme('colors.fitness.navy.700');
+    --fitness-accent: theme('colors.fitness.orange.500');
+    --fitness-text: theme('colors.white');
+    --fitness-text-muted: theme('colors.fitness.navy.200');
+    --fitness-border: theme('colors.fitness.navy.600');
+  }
+
   * {
-    @apply border-gray-200;
+    @apply border-fitness-navy-600/20;
   }
+  
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-fitness-gradient text-white antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-fitness-navy-900/50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-fitness-navy-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-fitness-navy-500;
   }
 }
 
-/* Custom animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+@layer components {
+  /* Professional card designs for fitness data */
+  .fitness-card {
+    @apply bg-gradient-to-br from-fitness-navy-800/80 to-fitness-navy-900/80;
+    @apply border border-fitness-navy-600/30 rounded-2xl;
+    @apply shadow-fitness-lg backdrop-blur-sm;
+    @apply transition-all duration-300 ease-out;
   }
-  to {
-    opacity: 1;
+
+  .fitness-card:hover {
+    @apply border-fitness-navy-500/50 shadow-fitness-xl;
+    @apply transform translate-y-[-2px];
+  }
+
+  .fitness-card-active {
+    @apply bg-gradient-to-br from-fitness-orange-500/10 to-fitness-navy-800/80;
+    @apply border-fitness-orange-500/40 shadow-glow-orange;
+  }
+
+  /* Data visualization containers */
+  .chart-container {
+    @apply bg-gradient-to-br from-fitness-navy-900/90 to-fitness-navy-800/90;
+    @apply border border-fitness-navy-600/20 rounded-xl;
+    @apply shadow-fitness backdrop-blur-sm;
+  }
+
+  /* Metrics display cards */
+  .metric-card {
+    @apply bg-gradient-to-br from-white/5 to-white/10;
+    @apply border border-white/10 rounded-xl p-4;
+    @apply shadow-fitness backdrop-blur-sm;
+    @apply transition-all duration-200;
+  }
+
+  .metric-card:hover {
+    @apply bg-gradient-to-br from-white/10 to-white/15;
+    @apply border-white/20;
+  }
+
+  /* Status indicators */
+  .status-excellent {
+    @apply bg-gradient-to-r from-fitness-green-500 to-fitness-green-600;
+  }
+
+  .status-good {
+    @apply bg-gradient-to-r from-fitness-blue-500 to-fitness-blue-600;
+  }
+
+  .status-caution {
+    @apply bg-gradient-to-r from-fitness-amber-500 to-fitness-amber-600;
+  }
+
+  .status-danger {
+    @apply bg-gradient-to-r from-fitness-red-500 to-fitness-red-600;
+  }
+
+  /* Interactive elements */
+  .interactive-element {
+    @apply transition-all duration-200 ease-out;
+    @apply hover:scale-105 active:scale-95;
+  }
+
+  /* Loading states */
+  .loading-shimmer {
+    background: linear-gradient(90deg, 
+      theme('colors.fitness.navy.800') 25%, 
+      theme('colors.fitness.navy.700') 50%, 
+      theme('colors.fitness.navy.800') 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Typography enhancements */
+  .metric-value {
+    @apply font-mono font-bold tracking-tight;
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+    @apply bg-gradient-to-r from-white to-fitness-navy-100 bg-clip-text text-transparent;
+  }
+
+  .metric-label {
+    @apply text-sm font-medium tracking-wide uppercase;
+    @apply text-fitness-navy-300;
+  }
+
+  .page-title {
+    @apply text-3xl sm:text-4xl font-bold tracking-tight;
+    @apply bg-gradient-to-r from-white via-fitness-navy-100 to-fitness-orange-200 bg-clip-text text-transparent;
+  }
+
+  .section-title {
+    @apply text-xl sm:text-2xl font-semibold;
+    @apply text-white;
+  }
+
+  /* Navigation enhancements */
+  .nav-item {
+    @apply relative px-4 py-2 rounded-lg font-medium;
+    @apply text-fitness-navy-200 hover:text-white;
+    @apply transition-all duration-200;
+    @apply before:absolute before:inset-0 before:rounded-lg;
+    @apply before:bg-gradient-to-r before:from-fitness-orange-500/10 before:to-fitness-blue-500/10;
+    @apply before:opacity-0 before:transition-opacity before:duration-200;
+    @apply hover:before:opacity-100;
+  }
+
+  .nav-item-active {
+    @apply text-white bg-gradient-to-r from-fitness-orange-500/20 to-fitness-blue-500/20;
+    @apply border border-fitness-orange-500/30;
+    @apply shadow-glow-orange;
+  }
+
+  /* Form elements */
+  .form-input {
+    @apply bg-fitness-navy-800/80 border-fitness-navy-600/30;
+    @apply text-white placeholder-fitness-navy-400;
+    @apply rounded-xl px-4 py-3;
+    @apply focus:border-fitness-orange-500/50 focus:ring-2 focus:ring-fitness-orange-500/20;
+    @apply transition-all duration-200;
+  }
+
+  /* Force dark theme on ALL form elements with high specificity */
+  input, select, textarea, 
+  input[type="text"], input[type="number"], input[type="date"], 
+  input[type="email"], input[type="password"], input[type="search"] {
+    background-color: rgb(30 41 59) !important; /* navy-800 */
+    color: rgb(229 231 235) !important; /* gray-200 */
+    border-color: rgb(71 85 105) !important; /* navy-600 */
+  }
+
+  /* Placeholder text */
+  input::placeholder, textarea::placeholder {
+    color: rgb(156 163 175) !important; /* gray-400 */
+  }
+
+  /* Select and option elements */
+  select, select option {
+    background-color: rgb(30 41 59) !important; /* navy-800 */
+    color: rgb(229 231 235) !important; /* gray-200 */
+  }
+
+  /* Target training plan form specifically */
+  .training-plan-form input,
+  .training-plan-form select,
+  .training-plan-form textarea {
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  .training-plan-form input::placeholder {
+    color: rgb(156 163 175) !important;
+  }
+
+  /* Ultra-aggressive targeting for stubborn elements */
+  div.training-plan-form input,
+  div.training-plan-form select,
+  div.training-plan-form textarea,
+  .training-plan-form div input,
+  .training-plan-form div select,
+  .training-plan-form div textarea,
+  [class*="training-plan"] input,
+  [class*="training-plan"] select {
+    background: rgb(30 41 59) !important;
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  /* Force webkit styling */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
+  /* More specific targeting for training plan modal forms only */
+  .training-plan-form input,
+  .training-plan-form select,
+  .training-plan-form textarea,
+  [class*="fixed"][class*="inset-0"] .training-plan-form input,
+  [class*="fixed"][class*="inset-0"] .training-plan-form select,
+  [class*="fixed"][class*="inset-0"] .training-plan-form textarea {
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  .training-plan-form input::placeholder,
+  [class*="fixed"][class*="inset-0"] .training-plan-form input::placeholder {
+    color: rgb(156 163 175) !important;
+  }
+
+  /* Button enhancements moved to Button component */
+  
+  /* Animations */
+  .animate-metrics {
+    animation: metricsEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
+@layer utilities {
+  /* Custom animations */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  @keyframes metricsEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px theme('colors.fitness.orange.500');
+    }
+    50% {
+      box-shadow: 0 0 20px theme('colors.fitness.orange.500'), 
+                  0 0 30px theme('colors.fitness.orange.400');
+    }
+  }
+
+  /* Utility classes */
+  .text-gradient-orange {
+    @apply bg-gradient-to-r from-fitness-orange-400 to-fitness-orange-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-blue {
+    @apply bg-gradient-to-r from-fitness-blue-400 to-fitness-blue-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-performance {
+    @apply bg-gradient-to-r from-fitness-green-400 via-fitness-blue-400 to-fitness-orange-400 bg-clip-text text-transparent;
+  }
+
+  .border-gradient-orange {
+    border-image: linear-gradient(45deg, theme('colors.fitness.orange.500'), theme('colors.fitness.orange.600')) 1;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
   }
 }
 
-/* Glassmorphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Print styles */
+@media print {
+  .fitness-card,
+  .chart-container {
+    @apply border border-gray-300 bg-white;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  
+  .metric-value,
+  .page-title {
+    color: #1e293b !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+  }
 }

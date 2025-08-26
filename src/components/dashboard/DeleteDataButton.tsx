@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api';
@@ -74,9 +75,9 @@ export function DeleteDataButton({ className = '' }: DeleteDataButtonProps) {
       </button>
 
       {/* Confirmation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-gray-900 border border-red-500/20 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      {showModal && typeof window !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-gray-900 border border-red-500/50 rounded-2xl max-w-md w-full p-6 shadow-2xl">
             {/* Header */}
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center">
@@ -90,10 +91,10 @@ export function DeleteDataButton({ className = '' }: DeleteDataButtonProps) {
 
             {/* Warning Text */}
             <div className="mb-6">
-              <p className="text-white/80 mb-4">
+              <p className="text-gray-200 mb-4">
                 This will permanently delete all your data from our systems:
               </p>
-              <ul className="space-y-2 text-white/70 text-sm">
+              <ul className="space-y-2 text-gray-300 text-sm">
                 <li className="flex items-center space-x-2">
                   <span className="text-red-400">•</span>
                   <span>All Strava activity data</span>
@@ -115,7 +116,7 @@ export function DeleteDataButton({ className = '' }: DeleteDataButtonProps) {
 
             {/* Confirmation Input */}
             <div className="mb-6">
-              <label htmlFor="confirm-delete" className="block text-white/80 text-sm mb-2">
+              <label htmlFor="confirm-delete" className="block text-gray-200 text-sm mb-2">
                 Type <span className="font-bold text-red-400">DELETE</span> to confirm:
               </label>
               <input
@@ -126,6 +127,11 @@ export function DeleteDataButton({ className = '' }: DeleteDataButtonProps) {
                 placeholder="DELETE"
                 disabled={isDeleting}
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:opacity-50"
+                style={{
+                  backgroundColor: 'rgb(31 41 55)',
+                  color: 'rgb(255 255 255)',
+                  borderColor: 'rgb(75 85 99)'
+                }}
                 autoComplete="off"
               />
             </div>
@@ -162,7 +168,8 @@ export function DeleteDataButton({ className = '' }: DeleteDataButtonProps) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

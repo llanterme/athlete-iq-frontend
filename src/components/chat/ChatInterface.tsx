@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { apiClient, ChatMessage, ChatResponse } from '@/lib/api';
 
 interface ChatInterfaceProps {
@@ -254,7 +253,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
         // Headers (### Header)
         if (trimmed.startsWith('### ')) {
           return (
-            <h3 key={index} className="font-semibold text-lg mt-4 mb-2 text-primary-600">
+            <h3 key={index} className="font-semibold text-lg mt-4 mb-2 text-orange-500">
               {trimmed.substring(4)}
             </h3>
           );
@@ -267,7 +266,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
           return (
             <p key={index} className="mb-2">
               {parts.map((part, i) => 
-                i % 2 === 1 ? <strong key={i} className="font-semibold text-accent-600">{part}</strong> : part
+                i % 2 === 1 ? <strong key={i} className="font-semibold text-orange-400">{part}</strong> : part
               )}
             </p>
           );
@@ -277,7 +276,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
         if (trimmed.startsWith('• ')) {
           return (
             <div key={index} className="flex items-start mb-1">
-              <span className="text-secondary-500 mr-2">•</span>
+              <span className="text-orange-400 mr-2">•</span>
               <span>{trimmed.substring(2)}</span>
             </div>
           );
@@ -287,8 +286,8 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
         if (trimmed.includes('🎯 **Goal:**') || trimmed.includes('🔥 **Hot Take:**') || 
             trimmed.includes('💡 **Pro Tip:**') || trimmed.includes('📈 **Progress:**')) {
           return (
-            <div key={index} className="bg-gradient-to-r from-primary-50 to-secondary-50 p-3 rounded-lg my-3 border-l-4 border-primary-400">
-              <p className="font-medium">{trimmed}</p>
+            <div key={index} className="bg-gradient-to-r from-orange-950/30 to-blue-950/30 p-3 rounded-lg my-3 border-l-4 border-orange-500">
+              <p className="font-medium text-gray-200">{trimmed}</p>
             </div>
           );
         }
@@ -304,25 +303,23 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
   };
 
   return (
-    <Card className="flex flex-col h-[800px] bg-white">
+    <div className="flex flex-col h-[600px] bg-navy-900/95 border border-navy-700 rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800">Chat with AI</h3>
+      <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-navy-800">
+        <h3 className="text-lg font-semibold text-gray-100">AI Training Assistant</h3>
         <div className="flex items-center gap-2">
           <Button
             onClick={startNewChat}
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="text-blue-600 hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-md px-3 py-1.5"
           >
             ➕ New Chat
           </Button>
           <Button
             onClick={clearHistory}
-            variant="ghost"
+            variant="outline"
             size="sm"
             disabled={messages.length === 0}
-            className="text-red-600 hover:bg-red-50 border border-red-200 hover:border-red-300 rounded-md px-3 py-1.5"
           >
             🗑️ Clear Chat
           </Button>
@@ -330,14 +327,14 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-navy-950/50 min-h-0">
         {messages.length === 0 ? (
-          <div className="text-center text-gray-600 py-12">
-            <p className="text-xl mb-4">💬 Let's talk about your fitness</p>
-            <p className="text-base mb-6">
+          <div className="text-center text-gray-400 py-12">
+            <p className="text-xl mb-4 text-gray-200">💬 Let's talk about your fitness</p>
+            <p className="text-base mb-6 text-gray-300">
               Ask me anything about your activities, training, or performance!
             </p>
-            <div className="text-sm space-y-2 text-gray-500">
+            <div className="text-sm space-y-2 text-gray-400">
               <p>• "How was my running performance last month?"</p>
               <p>• "What's my longest ride this year?"</p>
               <p>• "Show me my most challenging activities"</p>
@@ -352,8 +349,8 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
               <div
                 className={`max-w-[85%] p-4 rounded-lg shadow-sm ${
                   message.role === 'user'
-                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white'
-                    : 'bg-gradient-to-r from-gray-50 to-white text-gray-800 border border-gray-200'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+                    : 'bg-navy-900/50 text-gray-200 border border-navy-700'
                 }`}
               >
                 <div className="text-sm whitespace-pre-wrap">
@@ -371,10 +368,10 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 p-3 rounded-lg">
+            <div className="bg-navy-900/50 p-3 rounded-lg border border-navy-700">
               <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary-500"></div>
-                <span className="text-sm text-gray-800">AI is thinking...</span>
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-orange-500"></div>
+                <span className="text-sm text-gray-300">AI is analyzing...</span>
               </div>
             </div>
           </div>
@@ -385,8 +382,8 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
 
       {/* Follow-up Questions */}
       {followUpQuestions.length > 0 && (
-        <div className="p-4 border-t border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
-          <p className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+        <div className="flex-shrink-0 p-4 border-t border-navy-800 bg-gradient-to-r from-navy-900/30 to-blue-950/30">
+          <p className="text-sm font-medium text-gray-300 mb-3 flex items-center">
             <span className="mr-2">💡</span>
             Quick questions to explore:
           </p>
@@ -396,7 +393,7 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
                 key={index}
                 onClick={() => handleFollowUpQuestion(question)}
                 disabled={isLoading}
-                className="px-3 py-2 text-xs bg-white hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 border border-primary-200 rounded-full transition-all duration-200 hover:border-primary-400 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2 text-xs bg-navy-900/50 text-gray-200 hover:bg-orange-500/20 border border-navy-700 rounded-full transition-all duration-200 hover:border-orange-500 hover:shadow-sm hover:shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {question}
               </button>
@@ -407,20 +404,20 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 bg-red-500/10 border-t border-red-500/20">
+        <div className="flex-shrink-0 p-4 bg-red-950/30 border-t border-red-900/50">
           <p className="text-red-400 text-sm">{error}</p>
         </div>
       )}
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="flex-shrink-0 p-4 border-t border-navy-800">
         <div className="flex gap-2">
           <textarea
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Ask me about your fitness activities..."
-            className="flex-1 px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+            className="flex-1 px-3 py-2 bg-navy-900/50 border border-navy-700 rounded-lg text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
             rows={1}
             disabled={isLoading}
           />
@@ -434,6 +431,6 @@ export function ChatInterface({ onActivitySelect }: ChatInterfaceProps) {
           </Button>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
