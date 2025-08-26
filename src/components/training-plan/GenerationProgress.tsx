@@ -61,10 +61,10 @@ export function GenerationProgress({ isGenerating, jobId, userId, error, onRetry
     return (
       <div className="text-center py-8">
         <div className="text-6xl mb-4">⚠️</div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-lg font-semibold text-gray-200 mb-2">
           Generation Failed
         </h3>
-        <p className="text-gray-600 mb-6 max-w-md mx-auto">
+        <p className="text-gray-400 mb-6 max-w-md mx-auto">
           {error}
         </p>
         <div className="space-y-3">
@@ -88,29 +88,29 @@ export function GenerationProgress({ isGenerating, jobId, userId, error, onRetry
       <div className="mb-8">
         {/* Animated AI Icon */}
         <div className="relative mx-auto w-20 h-20 mb-6">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-tertiary-400 to-tertiary-600 animate-pulse"></div>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 animate-pulse"></div>
           <div className="absolute inset-2 rounded-full bg-white flex items-center justify-center">
             <span className="text-2xl animate-bounce">🤖</span>
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-xl font-semibold text-gray-200 mb-2">
           Generating Your Training Plan
         </h3>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-400 mb-6">
           Our AI is creating a personalized plan tailored to your goals and constraints
         </p>
       </div>
 
       {/* Progress Bar */}
       <div className="mb-8 max-w-md mx-auto">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
+        <div className="flex justify-between text-sm text-gray-400 mb-2">
           <span>Progress</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-3">
+        <div className="w-full bg-gray-700 rounded-full h-3">
           <div 
-            className="bg-gradient-to-r from-tertiary-500 to-tertiary-600 h-3 rounded-full transition-all duration-500 ease-out"
+            className="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -118,10 +118,10 @@ export function GenerationProgress({ isGenerating, jobId, userId, error, onRetry
 
       {/* Current Step */}
       <div className="max-w-md mx-auto">
-        <Card className="p-6 bg-tertiary-50 border-tertiary-200">
+        <Card className="p-6 bg-navy-800/50 border-navy-600">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-tertiary-600 mr-3"></div>
-            <p className="text-tertiary-800 font-medium">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500 mr-3"></div>
+            <p className="text-gray-200 font-medium">
               {currentMessage}
             </p>
           </div>
@@ -139,22 +139,22 @@ export function GenerationProgress({ isGenerating, jobId, userId, error, onRetry
 
       {/* Estimated Time */}
       <div className="mt-6">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-400">
           {jobStatus?.estimated_completion 
             ? `Estimated completion: ${new Date(jobStatus.estimated_completion).toLocaleTimeString()}`
             : 'Estimated time: 30-60 seconds'
           }
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-gray-500 mt-1">
           Complex plans may take longer to optimize
         </p>
       </div>
 
       {/* Tips while waiting */}
       <div className="mt-8 max-w-lg mx-auto">
-        <Card className="p-4 bg-blue-50 border-blue-200">
-          <h4 className="font-medium text-blue-900 mb-2">💡 Did you know?</h4>
-          <p className="text-sm text-blue-800">
+        <Card className="p-4 bg-blue-950/20 border-blue-900/50">
+          <h4 className="font-medium text-blue-300 mb-2">💡 Did you know?</h4>
+          <p className="text-sm text-blue-400">
             Your training plan will include structured workouts with specific intensity zones, 
             rest periods, and progressive overload to maximize your race performance while 
             minimizing injury risk.

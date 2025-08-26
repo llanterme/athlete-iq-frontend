@@ -73,7 +73,7 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 training-plan-form">
       <div>
         <h3 className="text-lg font-semibold text-gray-100 mb-2">
           Training Constraints & Schedule
@@ -96,6 +96,11 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               value={formData.days_per_week}
               onChange={(e) => handleInputChange('days_per_week', parseInt(e.target.value))}
               className="w-full px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)'
+              }}
             >
               {[1, 2, 3, 4, 5, 6, 7].map(days => (
                 <option key={days} value={days} className="bg-navy-800 text-gray-200">
@@ -117,6 +122,11 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               value={formData.max_hours_per_week}
               onChange={(e) => handleInputChange('max_hours_per_week', parseFloat(e.target.value))}
               className="w-full px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)'
+              }}
             />
           </div>
         </div>
@@ -202,6 +212,11 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               value={formData.preferred_training_time || ''}
               onChange={(e) => handleInputChange('preferred_training_time', e.target.value || undefined)}
               className="w-full px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)'
+              }}
             >
               <option value="" className="bg-navy-800 text-gray-200">No preference</option>
               <option value="morning" className="bg-navy-800 text-gray-200">Morning</option>
@@ -244,6 +259,12 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               value={newDisruption.start_date}
               onChange={(e) => setNewDisruption(prev => ({ ...prev, start_date: e.target.value }))}
               className="px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)',
+                colorScheme: 'dark'
+              }}
             />
             <input
               type="date"
@@ -251,6 +272,12 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               value={newDisruption.end_date}
               onChange={(e) => setNewDisruption(prev => ({ ...prev, end_date: e.target.value }))}
               className="px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)',
+                colorScheme: 'dark'
+              }}
             />
             <div className="flex gap-2">
               <input
@@ -259,6 +286,11 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
                 value={newDisruption.description}
                 onChange={(e) => setNewDisruption(prev => ({ ...prev, description: e.target.value }))}
                 className="flex-1 px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+                style={{
+                  backgroundColor: 'rgb(30 41 59)',
+                  color: 'rgb(229 231 235)',
+                  borderColor: 'rgb(71 85 105)'
+                }}
               />
               <Button
                 onClick={addDisruption}
@@ -301,6 +333,11 @@ export function ConstraintsForm({ data, onNext, onBack }: ConstraintsFormProps) 
               onChange={(e) => setNewInjury(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addInjury()}
               className="flex-1 px-3 py-2 bg-navy-800 text-gray-200 placeholder-gray-400 border border-navy-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent placeholder-gray-400"
+              style={{
+                backgroundColor: 'rgb(30 41 59)',
+                color: 'rgb(229 231 235)',
+                borderColor: 'rgb(71 85 105)'
+              }}
             />
             <Button
               onClick={addInjury}

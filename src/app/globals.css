@@ -167,15 +167,74 @@
     @apply transition-all duration-200;
   }
 
-  /* Ensure all form elements follow dark theme */
-  input, select, textarea {
-    @apply bg-fitness-navy-800 text-gray-200 placeholder-gray-400;
-    @apply border-fitness-navy-600;
+  /* Force dark theme on ALL form elements with high specificity */
+  input, select, textarea, 
+  input[type="text"], input[type="number"], input[type="date"], 
+  input[type="email"], input[type="password"], input[type="search"] {
+    background-color: rgb(30 41 59) !important; /* navy-800 */
+    color: rgb(229 231 235) !important; /* gray-200 */
+    border-color: rgb(71 85 105) !important; /* navy-600 */
   }
 
-  /* Option elements inside selects */
-  option {
-    @apply bg-fitness-navy-800 text-gray-200;
+  /* Placeholder text */
+  input::placeholder, textarea::placeholder {
+    color: rgb(156 163 175) !important; /* gray-400 */
+  }
+
+  /* Select and option elements */
+  select, select option {
+    background-color: rgb(30 41 59) !important; /* navy-800 */
+    color: rgb(229 231 235) !important; /* gray-200 */
+  }
+
+  /* Target training plan form specifically */
+  .training-plan-form input,
+  .training-plan-form select,
+  .training-plan-form textarea {
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  .training-plan-form input::placeholder {
+    color: rgb(156 163 175) !important;
+  }
+
+  /* Ultra-aggressive targeting for stubborn elements */
+  div.training-plan-form input,
+  div.training-plan-form select,
+  div.training-plan-form textarea,
+  .training-plan-form div input,
+  .training-plan-form div select,
+  .training-plan-form div textarea,
+  [class*="training-plan"] input,
+  [class*="training-plan"] select {
+    background: rgb(30 41 59) !important;
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  /* Force webkit styling */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
+  /* More specific targeting for training plan modal forms only */
+  .training-plan-form input,
+  .training-plan-form select,
+  .training-plan-form textarea,
+  [class*="fixed"][class*="inset-0"] .training-plan-form input,
+  [class*="fixed"][class*="inset-0"] .training-plan-form select,
+  [class*="fixed"][class*="inset-0"] .training-plan-form textarea {
+    background-color: rgb(30 41 59) !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgb(71 85 105) !important;
+  }
+
+  .training-plan-form input::placeholder,
+  [class*="fixed"][class*="inset-0"] .training-plan-form input::placeholder {
+    color: rgb(156 163 175) !important;
   }
 
   /* Button enhancements moved to Button component */

@@ -239,7 +239,7 @@ export function TrainingPlanForm({ onClose, onSuccess }: TrainingPlanFormProps) 
       }}
     >
       <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <Card className="bg-navy-900/95 border border-navy-700">
+        <Card className="bg-navy-900/95 border border-navy-700 training-plan-form">
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b">
             <div>
