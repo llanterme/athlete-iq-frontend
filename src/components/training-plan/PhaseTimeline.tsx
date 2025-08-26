@@ -20,7 +20,7 @@ interface PhaseTimelineProps {
 export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimelineProps) {
   if (!phases || phases.length === 0) {
     return (
-      <Card glass className="p-6">
+      <Card variant="default" className="p-6">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-white mb-4">
             Training Phases
@@ -39,7 +39,7 @@ export function PhaseTimeline({ phases, currentWeek, totalWeeks }: PhaseTimeline
   const progressPercent = currentWeek ? (currentWeek / totalWeeks) * 100 : 0;
 
   return (
-    <Card glass className="p-6">
+    <Card variant="default" className="p-6">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-white mb-4">
           Training Phases

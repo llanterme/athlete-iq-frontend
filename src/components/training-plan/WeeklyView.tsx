@@ -15,7 +15,7 @@ export function WeeklyView({ plan, selectedWeek }: WeeklyViewProps) {
   
   if (!weekPlan) {
     return (
-      <Card glass className="p-8 text-center">
+      <Card variant="default" className="p-8 text-center">
         <h3 className="text-lg font-semibold text-white mb-2">
           Week Not Found
         </h3>
@@ -32,7 +32,7 @@ export function WeeklyView({ plan, selectedWeek }: WeeklyViewProps) {
   return (
     <div className="space-y-6">
       {/* Week Overview */}
-      <Card glass className="p-6">
+      <Card variant="default" className="p-6">
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -162,7 +162,7 @@ export function WeeklyView({ plan, selectedWeek }: WeeklyViewProps) {
             ))}
           </div>
         ) : (
-          <Card glass className="p-8 text-center">
+          <Card variant="default" className="p-8 text-center">
             <h3 className="text-lg font-semibold text-white mb-2">
               No Workouts Scheduled
             </h3>

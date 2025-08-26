@@ -22,7 +22,7 @@ export function TrainingPlanCard({ plan, onClick, onDelete, isDeleting }: Traini
   const raceDate = parseISO(plan.race_date);
   
   return (
-    <Card glass className="hover:bg-white/15 transition-all duration-200 cursor-pointer group">
+    <Card variant="interactive" className="hover:bg-white/15 transition-all duration-200 cursor-pointer group">
       <div onClick={onClick} className="space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">
