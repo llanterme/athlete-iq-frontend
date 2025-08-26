@@ -32,11 +32,14 @@ export const Icons = {
     </svg>
   ),
 
-  spinner: ({ size = 'md', className, ...props }: IconProps) => (
-    <div className={clsx('animate-spin rounded-full border-2 border-current border-t-transparent', sizeClasses[size], className)} {...props}>
-      <span className="sr-only">Loading...</span>
-    </div>
-  ),
+  spinner: ({ size = 'md', className, ...props }: IconProps) => {
+    const { ref, ...divProps } = props;
+    return (
+      <div className={clsx('animate-spin rounded-full border-2 border-current border-t-transparent', sizeClasses[size], className)} {...divProps as any}>
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  },
 
   // User and authentication
   user: ({ size = 'md', className, ...props }: IconProps) => (

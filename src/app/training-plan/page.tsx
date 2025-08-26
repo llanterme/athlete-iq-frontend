@@ -187,7 +187,7 @@ export default function TrainingPlanPage() {
           {/* Stats */}
           {trainingPlans && trainingPlans.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {activePlans.length}
@@ -195,7 +195,7 @@ export default function TrainingPlanPage() {
                   <div className="text-white/70 text-sm">Active Plans</div>
                 </div>
               </Card>
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {pastPlans.length}
@@ -203,7 +203,7 @@ export default function TrainingPlanPage() {
                   <div className="text-white/70 text-sm">Completed Plans</div>
                 </div>
               </Card>
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {activePlans.length > 0 ? activePlans[0].daysUntilRace : '—'}
@@ -242,7 +242,7 @@ export default function TrainingPlanPage() {
               ))}
             </div>
           ) : (
-            <Card glass className="text-center py-12">
+            <Card variant="default" className="text-center py-12">
               <div className="text-6xl mb-4">🎯</div>
               <h2 className="text-xl font-bold text-white mb-2">
                 {showPastPlans ? 'No past plans' : 'No active training plans'}

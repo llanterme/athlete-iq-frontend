@@ -18,7 +18,7 @@ export function ProfileDetails({ athlete }: ProfileDetailsProps) {
   return (
     <div className="space-y-6">
       {/* Profile Header */}
-      <Card glass className="text-white">
+      <Card variant="default" className="text-white">
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
           <div className="flex-shrink-0 mx-auto lg:mx-0">
             {athlete.profile_medium || athlete.profile ? (
@@ -56,7 +56,7 @@ export function ProfileDetails({ athlete }: ProfileDetailsProps) {
       </Card>
 
       {/* Account Information */}
-      <Card glass className="text-white">
+      <Card variant="default" className="text-white">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
           <span>🏃‍♂️</span>
           Strava Account Details
@@ -93,7 +93,7 @@ export function ProfileDetails({ athlete }: ProfileDetailsProps) {
 
       {/* Additional Profile Stats */}
       {(athlete.follower_count !== undefined || athlete.mutual_friend_count !== undefined || athlete.sex) && (
-        <Card glass className="text-white">
+        <Card variant="default" className="text-white">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <span>📊</span>
             Profile Statistics
@@ -125,7 +125,7 @@ export function ProfileDetails({ athlete }: ProfileDetailsProps) {
       )}
 
       {/* Data Management */}
-      <Card glass className="text-white">
+      <Card variant="default" className="text-white">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
           <span>⚙️</span>
           Data Management
@@ -153,7 +153,7 @@ export function ProfileDetails({ athlete }: ProfileDetailsProps) {
       </Card>
 
       {/* Future Profile Editing Section - Placeholder */}
-      <Card glass className="text-white opacity-60">
+      <Card variant="default" className="text-white opacity-60">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
           <span>✏️</span>
           Edit Profile

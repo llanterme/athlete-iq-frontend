@@ -179,7 +179,7 @@ export default function TrainingPlanDetailPage() {
           />
 
           {/* Week Navigation */}
-          <Card glass className="p-4">
+          <Card variant="default" className="p-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-1">
@@ -242,7 +242,7 @@ export default function TrainingPlanDetailPage() {
 
           {/* Plan Insights */}
           <div className="grid gap-6 md:grid-cols-2">
-            <Card glass className="p-6">
+            <Card variant="default" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 📋 Plan Rationale
               </h3>
@@ -251,7 +251,7 @@ export default function TrainingPlanDetailPage() {
               </p>
             </Card>
 
-            <Card glass className="p-6">
+            <Card variant="default" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 🎯 Key Workouts
               </h3>
@@ -260,7 +260,7 @@ export default function TrainingPlanDetailPage() {
               </p>
             </Card>
 
-            <Card glass className="p-6">
+            <Card variant="default" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 📈 Periodization Strategy
               </h3>
@@ -269,7 +269,7 @@ export default function TrainingPlanDetailPage() {
               </p>
             </Card>
 
-            <Card glass className="p-6">
+            <Card variant="default" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">
                 💡 Assumptions & Warnings
               </h3>

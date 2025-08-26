@@ -14,7 +14,7 @@ function LoginContent() {
     <>
       {/* Data Deletion Confirmation */}
       {isDeleted && (
-        <Card glass className="text-center mb-6 border-green-500/30">
+        <Card variant="interactive" className="text-center mb-6 border-green-500/30">
           <div className="space-y-4">
             <div className="flex items-center justify-center space-x-3">
               <span className="text-3xl">✅</span>
@@ -69,7 +69,7 @@ export default function LoginPage() {
           <LoginContent />
         </Suspense>
 
-        <Card glass className="text-center">
+        <Card variant="default" className="text-center">
           <div className="space-y-6">
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-white">Welcome to Athlete IQ</h2>

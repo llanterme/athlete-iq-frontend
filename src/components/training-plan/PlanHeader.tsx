@@ -18,7 +18,7 @@ export function PlanHeader({ plan }: PlanHeaderProps) {
   const raceDate = parseISO(plan.race_date);
   
   return (
-    <Card glass className="p-6">
+    <Card variant="default" className="p-6">
       <div className="space-y-6">
         {/* Title and Race Info */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">

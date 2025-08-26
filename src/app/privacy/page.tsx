@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           </Button>
         </div>
 
-        <Card glass className="mb-8">
+        <Card variant="default" className="mb-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">Privacy Policy</h1>
             <p className="text-white/80">Last updated: January 2025</p>

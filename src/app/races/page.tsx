@@ -203,7 +203,7 @@ export default function RacesPage() {
           {/* Stats */}
           {races && races.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {upcomingRaces.length}
@@ -211,7 +211,7 @@ export default function RacesPage() {
                   <div className="text-white/70 text-sm">Upcoming Races</div>
                 </div>
               </Card>
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {pastRaces.length}
@@ -219,7 +219,7 @@ export default function RacesPage() {
                   <div className="text-white/70 text-sm">Completed Races</div>
                 </div>
               </Card>
-              <Card glass>
+              <Card variant="compact">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
                     {upcomingRaces.length > 0 ? upcomingRaces[0].daysUntilRace : '—'}
@@ -258,7 +258,7 @@ export default function RacesPage() {
               ))}
             </div>
           ) : (
-            <Card glass className="text-center py-12">
+            <Card variant="default" className="text-center py-12">
               <div className="text-6xl mb-4">🏁</div>
               <h2 className="text-xl font-bold text-white mb-2">
                 {showPastRaces ? 'No past races' : 'No upcoming races'}

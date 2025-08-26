@@ -67,7 +67,7 @@ export function RaceForm({ race, onSubmit, onCancel, isSubmitting = false, error
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <Card glass className="w-full max-w-md">
+      <Card variant="default" className="w-full max-w-md">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-white mb-2">
             {race ? 'Edit Race' : 'Add New Race'}

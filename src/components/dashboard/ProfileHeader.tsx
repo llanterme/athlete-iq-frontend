@@ -14,7 +14,7 @@ export function ProfileHeader({ athlete }: ProfileHeaderProps) {
     .join(', ') || 'Location not specified';
 
   return (
-    <Card glass className="text-white">
+    <Card variant="default" className="text-white">
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
         <div className="flex-shrink-0">
           {athlete.profile_medium || athlete.profile ? (

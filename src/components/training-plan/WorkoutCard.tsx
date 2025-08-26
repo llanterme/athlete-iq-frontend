@@ -24,7 +24,7 @@ export function WorkoutCard({ workout }: WorkoutCardProps) {
 
   return (
     <Card 
-      glass 
+      variant="interactive" 
       className={`transition-all duration-200 ${
         isRestDay 
           ? 'opacity-75' 

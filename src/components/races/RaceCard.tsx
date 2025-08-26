@@ -45,7 +45,7 @@ export function RaceCard({ race, onEdit, onDelete, isDeleting = false }: RaceCar
 
   return (
     <>
-      <Card glass className={`relative ${getCardStyle()}`}>
+      <Card variant="interactive" className={`relative ${getCardStyle()}`}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
